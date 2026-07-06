@@ -8,8 +8,21 @@ type DataEntryContextValue = {
 
 const DataEntryContext = createContext<DataEntryContextValue | null>(null);
 
+/**
+ * Formats today's date as YYYY-MM-DD
+ */
+function getTodayDateString(): string {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function DataEntryProvider({ children }: { children: ReactNode }) {
-  const [values, setValues] = useState<DataEntryValues>({});
+  const [values, setValues] = useState<DataEntryValues>({
+    date: getTodayDateString(),
+  });
 
   function saveField(key: DataEntryFieldKey, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }));
