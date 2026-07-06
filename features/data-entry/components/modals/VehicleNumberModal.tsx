@@ -77,10 +77,10 @@ export function VehicleNumberModal({
 
       {/* Cancel Button */}
       <Button
-        variant="secondary"
+        variant="destructive"
         size="lg"
         onPress={onClose}
-        className="w-full"
+        className="w-full bg-red-600"
       >
         Cancel
       </Button>
