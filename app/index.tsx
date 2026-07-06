@@ -1,11 +1,13 @@
-import { Text, View } from "react-native";
+import { ScrollView } from "react-native";
+import { RevenueChartCard } from "@/features/revenue-chart/components/RevenueChartCard";
 
 export default function Index() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Welcome to Nativewind!
-      </Text>
-    </View>
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="gap-4 p-4"
+    >
+      <RevenueChartCard />
+    </ScrollView>
   );
 }
