@@ -1,9 +1,5 @@
-import { Text, View } from "react-native";
+import { DataEntryScreen } from "@/features/data-entry/DataEntryScreen";
 
 export default function DataEntry() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">Data Entry</Text>
-    </View>
-  );
+  return <DataEntryScreen />;
 }

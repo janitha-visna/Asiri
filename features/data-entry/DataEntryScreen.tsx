@@ -1,0 +1,32 @@
+import { ScrollView, View } from "react-native";
+import { DATA_ENTRY_FIELDS } from "./data-entry.constants";
+import { DataEntryCard } from "./components/DataEntryCard";
+import { DataEntryModal } from "./components/DataEntryModal";
+import { useDataEntry } from "./useDataEntry";
+
+export function DataEntryScreen() {
+  const { values, activeField, openField, closeField, saveField } =
+    useDataEntry();
+
+  return (
+    <View className="flex-1 bg-background">
+      <ScrollView className="flex-1 p-4" contentContainerClassName="pb-4">
+        {DATA_ENTRY_FIELDS.map((field) => (
+          <DataEntryCard
+            key={field.key}
+            field={field}
+            value={values[field.key]}
+            onPress={openField}
+          />
+        ))}
+      </ScrollView>
+
+      <DataEntryModal
+        field={activeField}
+        value={activeField ? values[activeField.key] : undefined}
+        onClose={closeField}
+        onSave={saveField}
+      />
+    </View>
+  );
+}
