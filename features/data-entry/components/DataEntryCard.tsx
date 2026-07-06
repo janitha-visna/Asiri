@@ -11,8 +11,11 @@ type DataEntryCardProps = {
 
 export function DataEntryCard({ field, value, onPress }: DataEntryCardProps) {
   return (
-    <Pressable onPress={() => onPress(field)} className="mb-3 active:opacity-70">
-      <Card>
+    <Pressable
+      onPress={() => onPress(field)}
+      className="w-[48%] active:opacity-70"
+    >
+      <Card className="flex-1">
         <CardHeader className="pb-0">
           <CardTitle>{field.label}</CardTitle>
         </CardHeader>

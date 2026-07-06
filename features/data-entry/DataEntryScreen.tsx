@@ -1,7 +1,7 @@
 import { ScrollView, View } from "react-native";
-import { DATA_ENTRY_FIELDS } from "./data-entry.constants";
 import { DataEntryCard } from "./components/DataEntryCard";
 import { DataEntryModal } from "./components/DataEntryModal";
+import { DATA_ENTRY_FIELDS } from "./data-entry.constants";
 import { useDataEntry } from "./useDataEntry";
 
 export function DataEntryScreen() {
@@ -10,15 +10,17 @@ export function DataEntryScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScrollView className="flex-1 p-4" contentContainerClassName="pb-4">
-        {DATA_ENTRY_FIELDS.map((field) => (
-          <DataEntryCard
-            key={field.key}
-            field={field}
-            value={values[field.key]}
-            onPress={openField}
-          />
-        ))}
+      <ScrollView className="flex-1 p-3">
+        <View className="flex-row flex-wrap gap-3">
+          {DATA_ENTRY_FIELDS.map((field) => (
+            <DataEntryCard
+              key={field.key}
+              field={field}
+              value={values[field.key]}
+              onPress={openField}
+            />
+          ))}
+        </View>
       </ScrollView>
 
       <DataEntryModal
