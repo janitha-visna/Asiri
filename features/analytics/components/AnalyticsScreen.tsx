@@ -12,6 +12,7 @@ import { AnalyticsErrorState } from "./AnalyticsErrorState";
 import { AnalyticsSummaryCards } from "./AnalyticsSummaryCards";
 import { RepeatVehicleLegend } from "./RepeatVehicleLegend";
 import { RepeatVehicleStackedBarChart } from "./RepeatVehicleStackedBarChart";
+import { ServiceTrendsSection } from "@/features/service-trends/components/ServiceTrendsSection";
 
 export function AnalyticsScreen() {
   const insets = useSafeAreaInsets();
@@ -57,6 +58,8 @@ export function AnalyticsScreen() {
           )}
         </CardContent>
       </Card>
+
+      <ServiceTrendsSection />
     </ScrollView>
   );
 }
