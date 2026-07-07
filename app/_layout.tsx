@@ -27,6 +27,13 @@ export default function RootLayout() {
             title: "Analytics",
           }}
         />
+        <Drawer.Screen
+          name="revenue-analytics"
+          options={{
+            drawerLabel: "Revenue",
+            title: "Revenue Analytics",
+          }}
+        />
       </Drawer>
       <PortalHost />
     </>
