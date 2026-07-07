@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui/text";
+import { useMemo } from "react";
 import { Dimensions, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LineChart } from "react-native-gifted-charts";
@@ -31,10 +32,14 @@ function PointerLabel({ items }: { items: ChartDataItem[] }) {
 }
 
 export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
-  const chartData: ChartDataItem[] = data.map((point) => ({
-    value: point.value ?? 0,
-    label: point.month,
-  }));
+  const chartData: ChartDataItem[] = useMemo(
+    () =>
+      data.map((point) => ({
+        value: point.value ?? 0,
+        label: point.month,
+      })),
+    [data],
+  );
 
   const POINT_SPACING = 56;
   const INITIAL_SPACING = 16;
