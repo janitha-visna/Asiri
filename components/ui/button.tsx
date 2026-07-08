@@ -30,6 +30,13 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
       ghost: "bg-transparent",
     }[variant];
 
+    const textVariantClasses = {
+      default: "text-primary-foreground",
+      secondary: "text-secondary-foreground",
+      destructive: "text-destructive-foreground",
+      ghost: "text-foreground",
+    }[variant];
+
     const sizeClasses = {
       default: "px-4 py-2 rounded-md",
       sm: "px-3 py-1.5 rounded-sm",
@@ -51,7 +58,9 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
         {...props}
       >
         {typeof children === "string" ? (
-          <Text className="font-semibold text-primary-foreground">{children}</Text>
+          <Text className={cn("font-semibold", textVariantClasses)}>
+            {children}
+          </Text>
         ) : (
           children
         )}
