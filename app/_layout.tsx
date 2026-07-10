@@ -41,6 +41,13 @@ export default function RootLayout() {
             title: "Electricity Consumption",
           }}
         />
+        <Drawer.Screen
+          name="inventory"
+          options={{
+            drawerLabel: "Inventory",
+            title: "Inventory",
+          }}
+        />
       </Drawer>
       <PortalHost />
     </>
