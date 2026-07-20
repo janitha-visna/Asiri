@@ -1,10 +1,11 @@
 import "../global.css";
 import { Drawer } from "expo-router/drawer";
 import { PortalHost } from "@rn-primitives/portal";
+import { InventoryProvider } from "@/features/inventory/InventoryContext";
 
 export default function RootLayout() {
   return (
-    <>
+    <InventoryProvider>
       <Drawer>
         <Drawer.Screen
           name="index"
@@ -48,8 +49,15 @@ export default function RootLayout() {
             title: "Inventory",
           }}
         />
+        <Drawer.Screen
+          name="inventory-usage"
+          options={{
+            drawerLabel: "Inventory Usage",
+            title: "Inventory Usage",
+          }}
+        />
       </Drawer>
       <PortalHost />
-    </>
+    </InventoryProvider>
   );
 }

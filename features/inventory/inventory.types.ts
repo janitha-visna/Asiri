@@ -21,14 +21,18 @@ export type InventoryVariant = {
   name: string;
 };
 
+export type StockTransactionType = "addition" | "usage";
+
 /**
- * A single dated stock addition. Owned either by a variant (variants-enabled
- * categories) or directly by a category (non-variant categories) — the
- * `ownerId` is whichever of those two ids applies.
+ * A single dated stock transaction — either an addition (stock received) or
+ * a usage (stock consumed/reduced). Owned either by a variant
+ * (variants-enabled categories) or directly by a category (non-variant
+ * categories) — the `ownerId` is whichever of those two ids applies.
  */
 export type StockEntry = {
   id: string;
   ownerId: string;
+  type: StockTransactionType;
   date: string;
   dateLabel: string;
   quantity: number;
@@ -53,4 +57,9 @@ export type AddStockEntryInput = {
   quantity: number;
   purchasePrice?: number;
   sellingPrice?: number;
+};
+
+export type ReduceStockInput = {
+  quantity: number;
+  date: Date;
 };

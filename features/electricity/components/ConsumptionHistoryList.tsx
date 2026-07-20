@@ -1,21 +1,9 @@
 import { useState } from "react";
-import {
-  LayoutAnimation,
-  Platform,
-  UIManager,
-  View,
-} from "react-native";
+import { LayoutAnimation, View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import type { MeterReading } from "../electricity.types";
-
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 const COLLAPSED_COUNT = 3;
 

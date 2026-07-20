@@ -10,14 +10,29 @@ export function StockEntryCard({
   entry: StockEntry;
   unit: InventoryUnit;
 }) {
+  const isUsage = entry.type === "usage";
+
   return (
     <Card>
       <CardContent className="gap-1 p-3">
-        <Text className="text-sm font-semibold text-foreground">
-          {entry.dateLabel}
-        </Text>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-sm font-semibold text-foreground">
+            {entry.dateLabel}
+          </Text>
+          <Text
+            className={
+              isUsage
+                ? "text-xs font-semibold text-red-600"
+                : "text-xs font-semibold text-green-600"
+            }
+          >
+            {isUsage ? "Usage" : "Added"}
+          </Text>
+        </View>
         <Text className="text-xs text-muted-foreground">
-          Quantity Added: {entry.quantity.toLocaleString()} {unit}
+          {isUsage ? "Quantity Used" : "Quantity Added"}:{" "}
+          {isUsage ? "-" : "+"}
+          {entry.quantity.toLocaleString()} {unit}
         </Text>
         {(entry.purchasePrice !== undefined ||
           entry.sellingPrice !== undefined) && (

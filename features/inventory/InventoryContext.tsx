@@ -6,7 +6,9 @@ import type {
   CreateCategoryInput,
   InventoryCategory,
   InventoryVariant,
+  ReduceStockInput,
   StockEntry,
+  StockTransactionType,
 } from "./inventory.types";
 
 type InventoryContextValue = {
@@ -15,6 +17,7 @@ type InventoryContextValue = {
   addCategory: (input: CreateCategoryInput) => InventoryCategory;
   addVariant: (categoryId: string, input: AddVariantInput) => InventoryVariant;
   addStockEntry: (ownerId: string, input: AddStockEntryInput) => StockEntry;
+  reduceStock: (ownerId: string, input: ReduceStockInput) => StockEntry;
   getCategory: (categoryId: string) => InventoryCategory | undefined;
   getVariant: (variantId: string) => InventoryVariant | undefined;
   getVariants: (categoryId: string) => InventoryVariant[];
@@ -48,15 +51,20 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
 
   function recordStockEntry(
     ownerId: string,
-    input: AddStockEntryInput
+    type: StockTransactionType,
+    quantity: number,
+    date: Date,
+    extra?: { purchasePrice?: number; sellingPrice?: number }
   ): StockEntry {
-    const now = new Date();
     const entry: StockEntry = {
       id: generateId(),
       ownerId,
-      date: formatDateKey(now),
-      dateLabel: formatDateLabel(now),
-      ...input,
+      type,
+      date: formatDateKey(date),
+      dateLabel: formatDateLabel(date),
+      quantity,
+      purchasePrice: extra?.purchasePrice,
+      sellingPrice: extra?.sellingPrice,
     };
     setStockEntriesByOwner((prev) => ({
       ...prev,
@@ -72,8 +80,7 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
       ...prev,
       [categoryId]: [...(prev[categoryId] ?? []), variant],
     }));
-    recordStockEntry(variant.id, {
-      quantity: initialStock,
+    recordStockEntry(variant.id, "addition", initialStock, new Date(), {
       purchasePrice,
       sellingPrice,
     });
@@ -81,7 +88,14 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
   }
 
   function addStockEntry(ownerId: string, input: AddStockEntryInput): StockEntry {
-    return recordStockEntry(ownerId, input);
+    return recordStockEntry(ownerId, "addition", input.quantity, new Date(), {
+      purchasePrice: input.purchasePrice,
+      sellingPrice: input.sellingPrice,
+    });
+  }
+
+  function reduceStock(ownerId: string, input: ReduceStockInput): StockEntry {
+    return recordStockEntry(ownerId, "usage", input.quantity, input.date);
   }
 
   function getCategory(categoryId: string) {
@@ -103,7 +117,11 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
   }
 
   function getTotalStock(ownerId: string) {
-    return getStockEntries(ownerId).reduce((sum, entry) => sum + entry.quantity, 0);
+    return getStockEntries(ownerId).reduce(
+      (sum, entry) =>
+        entry.type === "usage" ? sum - entry.quantity : sum + entry.quantity,
+      0
+    );
   }
 
   return (
@@ -114,6 +132,7 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
         addCategory,
         addVariant,
         addStockEntry,
+        reduceStock,
         getCategory,
         getVariant,
         getVariants,
