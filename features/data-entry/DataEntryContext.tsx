@@ -4,6 +4,7 @@ import type { DataEntryFieldKey, DataEntryValues } from "./data-entry.types";
 type DataEntryContextValue = {
   values: DataEntryValues;
   saveField: (key: DataEntryFieldKey, value: string) => void;
+  getDisplayValue: (key: DataEntryFieldKey) => string | undefined;
 };
 
 const DataEntryContext = createContext<DataEntryContextValue | null>(null);
@@ -27,9 +28,18 @@ export function DataEntryProvider({ children }: { children: ReactNode }) {
   function saveField(key: DataEntryFieldKey, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
+  // ✨ Clean Formatter Function:
+  function getDisplayValue(key: DataEntryFieldKey): string | undefined {
+    if (key === "vehicleNumber" && values.vehicleNumber) {
+      return values.vehicleType
+        ? `${values.vehicleNumber} • ${values.vehicleType}`
+        : values.vehicleNumber;
+    }
+    return values[key];
+  }
 
   return (
-    <DataEntryContext.Provider value={{ values, saveField }}>
+    <DataEntryContext.Provider value={{ values, saveField, getDisplayValue }}>
       {children}
     </DataEntryContext.Provider>
   );
@@ -39,7 +49,7 @@ export function useDataEntryContext() {
   const context = useContext(DataEntryContext);
   if (!context) {
     throw new Error(
-      "useDataEntryContext must be used within a DataEntryProvider"
+      "useDataEntryContext must be used within a DataEntryProvider",
     );
   }
   return context;

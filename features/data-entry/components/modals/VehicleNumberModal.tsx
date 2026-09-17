@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, type SelectItem } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import type { DataEntryModalContentProps } from "./ModalContent.types";
+import { useDataEntryContext } from "../../DataEntryContext";
 
 const VEHICLE_TYPES: SelectItem[] = [
   { label: "Car", value: "car" },
@@ -19,6 +20,7 @@ export function VehicleNumberModal({
 }: DataEntryModalContentProps) {
   const [vehicleNumber, setVehicleNumber] = useState(value || "");
   const [vehicleType, setVehicleType] = useState<string>("");
+  const { values, saveField } = useDataEntryContext();
 
   const handleRegister = () => {
     if (!vehicleNumber.trim()) {
@@ -29,7 +31,7 @@ export function VehicleNumberModal({
       alert("Please select a vehicle type");
       return;
     }
-
+    saveField("vehicleType", vehicleType);
     // Save the vehicle number; vehicle type can be extended later
     onSave(vehicleNumber);
   };

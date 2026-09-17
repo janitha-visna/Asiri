@@ -1,5 +1,7 @@
+// features/data-entry/DataEntryFieldScreen.tsx
 import { router, useLocalSearchParams } from "expo-router";
 import { Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context"; // 1. Import hook
 import { Text } from "@/components/ui/text";
 import { MODAL_CONTENT_REGISTRY } from "./components/modals/modalRegistry";
 import { DATA_ENTRY_FIELDS } from "./data-entry.constants";
@@ -7,6 +9,8 @@ import type { DataEntryFieldKey } from "./data-entry.types";
 import { useDataEntryContext } from "./DataEntryContext";
 
 export function DataEntryFieldScreen() {
+  const insets = useSafeAreaInsets(); // 2. Get safe area insets
+  console.log("safe area insets", insets);
   const { field: fieldKey } = useLocalSearchParams<{
     field: DataEntryFieldKey;
   }>();
@@ -19,7 +23,11 @@ export function DataEntryFieldScreen() {
   const ModalContent = MODAL_CONTENT_REGISTRY[field.key];
 
   return (
-    <View className="flex-1 gap-4 bg-background p-6">
+    <View
+      className="flex-1 gap-4 bg-background p-6"
+      // 3. Add insets.bottom so buttons never go under the navigation bar
+      style={{ paddingBottom: Math.max(insets.bottom, 16) }}
+    >
       <View className="flex-row items-center justify-between">
         <Text className="text-lg font-semibold text-foreground">
           {field.label}

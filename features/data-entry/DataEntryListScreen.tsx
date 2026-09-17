@@ -5,17 +5,17 @@ import { DATA_ENTRY_FIELDS } from "./data-entry.constants";
 import { useDataEntryContext } from "./DataEntryContext";
 
 export function DataEntryListScreen() {
-  const { values } = useDataEntryContext();
+  const { getDisplayValue } = useDataEntryContext();
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1 bg-background ">
       <ScrollView className="flex-1 p-3" contentContainerClassName="pb-4">
         <View className="flex-row flex-wrap gap-3">
           {DATA_ENTRY_FIELDS.map((field) => (
             <DataEntryCard
               key={field.key}
               field={field}
-              value={values[field.key]}
+              value={getDisplayValue(field.key)}
               onPress={() =>
                 router.push({
                   pathname: "/data-entry/[field]",

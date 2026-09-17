@@ -1,5 +1,6 @@
+// features/data-entry/components/modals/modalRegistry.ts
 import type { ComponentType } from "react";
-import type { DataEntryFieldKey } from "../../data-entry.types";
+import type { DataEntryModalKey } from "../../data-entry.types"; // 👈 Use DataEntryModalKey
 import type { DataEntryModalContentProps } from "./ModalContent.types";
 import { VehicleNumberModal } from "./VehicleNumberModal";
 import { TelephoneNumberModal } from "./TelephoneNumberModal";
@@ -9,7 +10,7 @@ import { ServiceTypeModal } from "./ServiceTypeModal";
 import { OdometerReadingModal } from "./OdometerReadingModal";
 
 export const MODAL_CONTENT_REGISTRY: Record<
-  DataEntryFieldKey,
+  DataEntryModalKey, // 👈 Fixes the error!
   ComponentType<DataEntryModalContentProps>
 > = {
   vehicleNumber: VehicleNumberModal,
