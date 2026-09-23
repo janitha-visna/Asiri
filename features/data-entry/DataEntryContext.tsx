@@ -26,8 +26,18 @@ export function DataEntryProvider({ children }: { children: ReactNode }) {
   });
 
   function saveField(key: DataEntryFieldKey, value: string) {
-    setValues((prev) => ({ ...prev, [key]: value }));
+    setValues((prev) => {
+      // 1. Make a copy of the old state
+      const updatedValues = { ...prev };
+
+      // 2. Set the new key and value
+      updatedValues[key] = value;
+
+      // 3. Return the updated copy
+      return updatedValues;
+    });
   }
+
   // ✨ Clean Formatter Function:
   function getDisplayValue(key: DataEntryFieldKey): string | undefined {
     if (key === "vehicleNumber" && values.vehicleNumber) {

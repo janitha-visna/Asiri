@@ -31,9 +31,10 @@ export function VehicleNumberModal({
       alert("Please select a vehicle type");
       return;
     }
+    saveField("vehicleNumber", vehicleNumber.trim().toUpperCase());
     saveField("vehicleType", vehicleType);
     // Save the vehicle number; vehicle type can be extended later
-    onSave(vehicleNumber);
+    onClose();
   };
 
   return (
