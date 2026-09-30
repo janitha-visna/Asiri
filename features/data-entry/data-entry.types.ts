@@ -9,8 +9,11 @@ export type DataEntryModalKey =
   | "serviceType"
   | "odometerReading";
 
-// 2. All stored values in state (includes subfields like vehicleType):
-export type DataEntryFieldKey = DataEntryModalKey | "vehicleType";
+// 2. All stored values in state (includes subfields like vehicleType, nextOdometerReading):
+export type DataEntryFieldKey =
+  | DataEntryModalKey
+  | "vehicleType"
+  | "nextOdometerReading";
 
 export type DataEntryField = {
   key: DataEntryModalKey;

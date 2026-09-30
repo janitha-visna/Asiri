@@ -46,6 +46,11 @@ export function DataEntryProvider({ children }: { children: ReactNode }) {
         ? `${values.vehicleNumber} • ${values.vehicleType}`
         : values.vehicleNumber;
     }
+    if (key === "odometerReading" && values.odometerReading) {
+      return values.nextOdometerReading
+        ? `${values.odometerReading} km ➔ Next: ${values.nextOdometerReading} km`
+        : `${values.odometerReading} km`;
+    }
     return values[key];
   }
 
