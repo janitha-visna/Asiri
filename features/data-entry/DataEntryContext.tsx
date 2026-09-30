@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import type { DataEntryFieldKey, DataEntryValues } from "./data-entry.types";
 
+//define the type
 type DataEntryContextValue = {
   values: DataEntryValues;
   saveField: (key: DataEntryFieldKey, value: string) => void;
