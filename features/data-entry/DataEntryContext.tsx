@@ -1,71 +1,59 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import type { DataEntryFieldKey, DataEntryValues } from "./data-entry.types";
+// features/data-entry/DataEntryContext.tsx
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useReducer,
+  type Dispatch,
+  type ReactNode,
+} from "react";
+import {
+  createInitialDraft,
+  draftReducer,
+  type DraftAction,
+} from "./data-entry.reducer";
+import type { ServiceJobDraft } from "./data-entry.types";
 
-//define the type
 type DataEntryContextValue = {
-  values: DataEntryValues;
-  saveField: (key: DataEntryFieldKey, value: string) => void;
-  getDisplayValue: (key: DataEntryFieldKey) => string | undefined;
+  draft: ServiceJobDraft;
+  dispatch: Dispatch<DraftAction>;
 };
 
 const DataEntryContext = createContext<DataEntryContextValue | null>(null);
 
-/**
- * Formats today's date as YYYY-MM-DD
- */
-function getTodayDateString(): string {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 export function DataEntryProvider({ children }: { children: ReactNode }) {
-  const [values, setValues] = useState<DataEntryValues>({
-    date: getTodayDateString(),
-  });
+  // 1. Initialize the reducer with our initial empty draft state
+  const [draft, dispatch] = useReducer(
+    draftReducer,
+    undefined,
+    createInitialDraft
+  );
 
-  function saveField(key: DataEntryFieldKey, value: string) {
-    setValues((prev) => {
-      // 1. Make a copy of the old state
-      const updatedValues = { ...prev };
-
-      // 2. Set the new key and value
-      updatedValues[key] = value;
-
-      // 3. Return the updated copy
-      return updatedValues;
-    });
-  }
-
-  // ✨ Clean Formatter Function:
-  function getDisplayValue(key: DataEntryFieldKey): string | undefined {
-    if (key === "vehicleNumber" && values.vehicleNumber) {
-      return values.vehicleType
-        ? `${values.vehicleNumber} • ${values.vehicleType}`
-        : values.vehicleNumber;
-    }
-    if (key === "odometerReading" && values.odometerReading) {
-      return values.nextOdometerReading
-        ? `${values.odometerReading} km ➔ Next: ${values.nextOdometerReading} km`
-        : `${values.odometerReading} km`;
-    }
-    return values[key];
-  }
+  // 2. Memoize context value to prevent unnecessary re-renders of consuming components
+  const value = useMemo(
+    () => ({
+      draft,
+      dispatch,
+    }),
+    [draft]
+  );
 
   return (
-    <DataEntryContext.Provider value={{ values, saveField, getDisplayValue }}>
+    <DataEntryContext.Provider value={value}>
       {children}
     </DataEntryContext.Provider>
   );
 }
 
+/**
+ * Hook to consume the service job draft state and dispatch actions
+ * from any section or modal sheet within the data-entry flow.
+ */
 export function useDataEntryContext() {
   const context = useContext(DataEntryContext);
   if (!context) {
     throw new Error(
-      "useDataEntryContext must be used within a DataEntryProvider",
+      "useDataEntryContext must be used within a DataEntryProvider"
     );
   }
   return context;
