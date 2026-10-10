@@ -10,10 +10,22 @@ import {
 } from "expo-router/react-navigation";
 import { useColorScheme } from "nativewind";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   useEffect(() => {
     console.log("them change", colorScheme);
@@ -21,9 +33,10 @@ export default function RootLayout() {
   }, [colorScheme]);
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <InventoryProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+        <InventoryProvider>
         <Drawer>
           <Drawer.Screen
             name="index"
@@ -78,5 +91,6 @@ export default function RootLayout() {
         <PortalHost />
       </InventoryProvider>
     </ThemeProvider>
+    </QueryClientProvider>
   );
 }
