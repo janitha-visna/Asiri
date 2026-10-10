@@ -3,7 +3,7 @@ import { Pressable, Text, type ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
 
 interface ButtonProps extends ViewProps {
-  variant?: "default" | "secondary" | "destructive" | "ghost";
+  variant?: "default" | "secondary" | "destructive" | "ghost" | "outline";
   size?: "default" | "sm" | "lg";
   disabled?: boolean;
   onPress?: () => void;
@@ -28,6 +28,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
       secondary: "bg-secondary",
       destructive: "bg-destructive",
       ghost: "bg-transparent",
+      outline: "border border-input bg-background",
     }[variant];
 
     const textVariantClasses = {
@@ -35,6 +36,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
       secondary: "text-secondary-foreground",
       destructive: "text-destructive-foreground",
       ghost: "text-foreground",
+      outline: "text-foreground",
     }[variant];
 
     const sizeClasses = {

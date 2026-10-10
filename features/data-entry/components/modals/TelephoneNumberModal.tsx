@@ -12,7 +12,7 @@ export function TelephoneNumberModal({
   onClose,
 }: DataEntryModalContentProps) {
   const [phone, setPhone] = useState(value || "");
-  const { saveField } = useDataEntryContext();
+  //const { saveField } = useDataEntryContext();
 
   const handleSave = () => {
     const trimmedPhone = phone.trim();
@@ -23,7 +23,7 @@ export function TelephoneNumberModal({
     }
 
     // 1. Save the telephone number into global context using saveField
-    saveField("telephoneNumber", trimmedPhone);
+    //saveField("telephoneNumber", trimmedPhone);
 
     // 2. Go back / dismiss the modal
     onClose();

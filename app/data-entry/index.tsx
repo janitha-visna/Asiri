@@ -1,5 +1,5 @@
-import { DataEntryListScreen } from "@/features/data-entry/DataEntryListScreen";
+import { ServiceJobScreen } from "@/features/data-entry/ServiceJobScreen";
 
 export default function DataEntryIndex() {
-  return <DataEntryListScreen />;
+  return <ServiceJobScreen />;
 }
