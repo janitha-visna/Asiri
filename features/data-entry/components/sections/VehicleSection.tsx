@@ -62,7 +62,12 @@ export function VehicleSection() {
   const typeItems: SelectItem[] = vehicleTypes.map((t) => ({
     label: t.name,
     value: t.id,
+    description: t.description,
   }));
+
+  const selectedVehicleType = vehicleTypes.find(
+    (t) => t.id === draft.vehicle.vehicleTypeId
+  );
 
   const handleSelectSuggestion = (plate: string) => {
     dispatch({ type: "PLATE_CHANGED", plate });
@@ -181,26 +186,37 @@ export function VehicleSection() {
             Vehicle Type
           </Text>
           {isRegistered ? (
-            <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5">
+            <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5 gap-1">
               <Text className="text-sm font-medium text-foreground">
-                {vehicleTypes.find((t) => t.id === draft.vehicle.vehicleTypeId)
-                  ?.name ?? "Registered Type"}
+                {selectedVehicleType?.name ?? "Registered Type"}
               </Text>
+              {selectedVehicleType?.description ? (
+                <Text className="text-xs text-muted-foreground">
+                  {selectedVehicleType.description}
+                </Text>
+              ) : null}
             </View>
           ) : (
-            <Select
-              items={typeItems}
-              value={draft.vehicle.vehicleTypeId ?? ""}
-              onValueChange={(vehicleTypeId) =>
-                dispatch({ type: "TYPE_SELECTED", vehicleTypeId })
-              }
-              placeholder={
-                draft.vehicle.categoryId
-                  ? "Select Vehicle Type (e.g., Sedan, SUV)"
-                  : "Select a Category first"
-              }
-              disabled={!draft.vehicle.categoryId}
-            />
+            <>
+              <Select
+                items={typeItems}
+                value={draft.vehicle.vehicleTypeId ?? ""}
+                onValueChange={(vehicleTypeId) =>
+                  dispatch({ type: "TYPE_SELECTED", vehicleTypeId })
+                }
+                placeholder={
+                  draft.vehicle.categoryId
+                    ? "Select Vehicle Type (e.g., Sedan, SUV)"
+                    : "Select a Category first"
+                }
+                disabled={!draft.vehicle.categoryId}
+              />
+              {selectedVehicleType?.description ? (
+                <Text className="text-xs text-muted-foreground px-1">
+                  {selectedVehicleType.description}
+                </Text>
+              ) : null}
+            </>
           )}
         </View>
       </View>

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 export interface SelectItem {
   label: string;
   value: string;
+  description?: string;
 }
 
 interface SelectProps {
@@ -85,6 +86,18 @@ const Select = React.forwardRef<View, SelectProps>(
                     >
                       {item.label}
                     </Text>
+                    {item.description ? (
+                      <Text
+                        className={cn(
+                          "text-xs mt-0.5",
+                          value === item.value
+                            ? "text-primary-foreground/80"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {item.description}
+                      </Text>
+                    ) : null}
                   </Pressable>
                 ))}
               </ScrollView>

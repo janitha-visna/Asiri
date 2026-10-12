@@ -41,7 +41,7 @@ export type VehicleTypeDto = {
   id: Id;
   name: string;
   categoryId: Id;
-  description: String;
+  description: string;
 };
 
 export type PhoneDto = {
