@@ -1,4 +1,4 @@
-﻿// features/data-entry/hooks/queries.ts
+// features/data-entry/hooks/queries.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as api from "../data-entry.api";
 import type * as T from "../data-entry.types";
@@ -8,9 +8,11 @@ import type * as T from "../data-entry.types";
  */
 export const dataEntryKeys = {
   all: ["data-entry"] as const,
-  vehicleLookup: (plate: string) => [...dataEntryKeys.all, "vehicle-lookup", plate] as const,
+  vehicleLookup: (plate: string) =>
+    [...dataEntryKeys.all, "vehicle-lookup", plate] as const,
   categories: () => [...dataEntryKeys.all, "vehicle-categories"] as const,
-  vehicleTypes: (categoryId: string) => [...dataEntryKeys.all, "vehicle-types", categoryId] as const,
+  vehicleTypes: (categoryId: string) =>
+    [...dataEntryKeys.all, "vehicle-types", categoryId] as const,
   servicePackages: () => [...dataEntryKeys.all, "service-packages"] as const,
   availableServices: (typeId: string, packageId: string) =>
     [...dataEntryKeys.all, "available-services", typeId, packageId] as const,
@@ -25,70 +27,82 @@ export const dataEntryKeys = {
 export function useVehicleLookup(debouncedPlate: string) {
   const cleanPlate = debouncedPlate.trim().toUpperCase();
 
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.vehicleLookup(cleanPlate),
     queryFn: ({ signal }) => api.lookupVehicles(cleanPlate, signal),
     enabled: cleanPlate.length >= 2,
     staleTime: 1000 * 60 * 2, // 2 minutes cache
   });
+
+  return queryResult;
 }
 
 /**
  * 2. Vehicle Categories Query
  */
 export function useVehicleCategories() {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.categories(),
     queryFn: api.getVehicleCategories,
     staleTime: 1000 * 60 * 15, // 15 minutes (static catalog)
   });
+
+  return queryResult;
 }
 
 /**
  * 3. Vehicle Types for Selected Category (Cascading)
  */
 export function useVehicleTypes(categoryId?: string) {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.vehicleTypes(categoryId ?? ""),
     queryFn: () => api.getVehicleTypes(categoryId!),
     enabled: Boolean(categoryId),
     staleTime: 1000 * 60 * 15,
   });
+
+  return queryResult;
 }
 
 /**
  * 4. Primary Service Packages Query
  */
 export function useServicePackages() {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.servicePackages(),
     queryFn: api.getServicePackages,
     staleTime: 1000 * 60 * 15,
   });
+
+  return queryResult;
 }
 
 /**
  * 5. Available Specific Services for Vehicle Type + Package
  */
 export function useAvailableServices(typeId?: string, packageId?: string) {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.availableServices(typeId ?? "", packageId ?? ""),
     queryFn: () => api.getAvailableServices(typeId!, packageId!),
     enabled: Boolean(typeId && packageId),
     staleTime: 1000 * 60 * 10,
   });
+
+  return queryResult;
 }
 
 /**
  * 6. Compatible Part Brands for a Component on a Vehicle Type
  */
 export function useCompatibleParts(typeId?: string, componentId?: string) {
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: dataEntryKeys.compatibleParts(typeId ?? "", componentId ?? ""),
     queryFn: () => api.getCompatibleParts(typeId!, componentId!),
     enabled: Boolean(typeId && componentId),
     staleTime: 1000 * 60 * 10,
   });
+
+  return queryResult;
 }
 
 /**
@@ -98,11 +112,17 @@ export function useCompatibleParts(typeId?: string, componentId?: string) {
 export function useCreateServiceJobMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation<T.ServiceJobResponse, Error, T.CreateServiceJobPayload>({
+  const mutationResult = useMutation<
+    T.ServiceJobResponse,
+    Error,
+    T.CreateServiceJobPayload
+  >({
     mutationFn: (payload) => api.createServiceJob(payload),
     onSuccess: (data) => {
       // Invalidate relevant vehicle lookups so new vehicle/job is immediately discoverable
       queryClient.invalidateQueries({ queryKey: dataEntryKeys.all });
     },
   });
+
+  return mutationResult;
 }

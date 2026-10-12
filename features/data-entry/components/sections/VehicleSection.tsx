@@ -18,14 +18,12 @@ export function VehicleSection() {
   const { draft, dispatch } = useDataEntryContext();
   const debouncedPlate = useDebouncedValue(draft.vehicle.numberPlate, 300);
 
-  const {
-    data: lookupData,
-    isLoading: isLookupLoading,
-  } = useVehicleLookup(debouncedPlate);
+  const { data: lookupData, isLoading: isLookupLoading } =
+    useVehicleLookup(debouncedPlate);
 
   const { data: categories = [] } = useVehicleCategories();
   const { data: vehicleTypes = [] } = useVehicleTypes(
-    draft.vehicle.categoryId ?? undefined
+    draft.vehicle.categoryId ?? undefined,
   );
 
   // When exact match is detected from the lookup, auto-fill vehicle & customer if not already registered
@@ -47,7 +45,14 @@ export function VehicleSection() {
     ) {
       dispatch({ type: "VEHICLE_NOT_FOUND" });
     }
-  }, [lookupData, debouncedPlate, isLookupLoading, draft.vehicle.mode, draft.vehicle.id, dispatch]);
+  }, [
+    lookupData,
+    debouncedPlate,
+    isLookupLoading,
+    draft.vehicle.mode,
+    draft.vehicle.id,
+    dispatch,
+  ]);
 
   const categoryItems: SelectItem[] = categories.map((c) => ({
     label: c.name,
@@ -116,9 +121,7 @@ export function VehicleSection() {
         <Input
           placeholder="e.g., CB-1234 or WP-CAD-5544"
           value={draft.vehicle.numberPlate}
-          onChangeText={(plate) =>
-            dispatch({ type: "PLATE_CHANGED", plate })
-          }
+          onChangeText={(plate) => dispatch({ type: "PLATE_CHANGED", plate })}
           autoCapitalize="characters"
           editable={!isRegistered}
         />
@@ -157,8 +160,8 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5">
               <Text className="text-sm font-medium text-foreground">
-                {categories.find((c) => c.id === draft.vehicle.categoryId)?.name ??
-                  "Registered Category"}
+                {categories.find((c) => c.id === draft.vehicle.categoryId)
+                  ?.name ?? "Registered Category"}
               </Text>
             </View>
           ) : (
@@ -180,8 +183,8 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5">
               <Text className="text-sm font-medium text-foreground">
-                {vehicleTypes.find((t) => t.id === draft.vehicle.vehicleTypeId)?.name ??
-                  "Registered Type"}
+                {vehicleTypes.find((t) => t.id === draft.vehicle.vehicleTypeId)
+                  ?.name ?? "Registered Type"}
               </Text>
             </View>
           ) : (

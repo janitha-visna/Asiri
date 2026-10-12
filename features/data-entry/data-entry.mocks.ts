@@ -9,27 +9,48 @@ const delay = (ms = 400) => new Promise((resolve) => setTimeout(resolve, ms));
 // ============================================================================
 
 export const MOCK_CATEGORIES: T.VehicleCategoryDto[] = [
-  { id: "cat-1", name: "Passenger Cars" },
-  { id: "cat-2", name: "SUVs & 4x4" },
-  { id: "cat-3", name: "Commercial & Vans" },
-  { id: "cat-4", name: "Motorcycles" },
+  { id: "cat-1", name: "Motorcycle" },
+  { id: "cat-2", name: "Car" },
+  { id: "cat-3", name: "Cab" },
+  { id: "cat-4", name: "Van" },
+  { id: "cat-5", name: "Bus" },
+  { id: "cat-6", name: "Lorry" },
+  { id: "cat-7", name: "Commercial Vehicle" },
+  { id: "cat-8", name: "Tipper" },
 ];
 
 export const MOCK_VEHICLE_TYPES: T.VehicleTypeDto[] = [
-  // Passenger Cars
-  { id: "vt-1", name: "Sedan (e.g. Corolla, Civic)", categoryId: "cat-1" },
-  { id: "vt-2", name: "Hatchback (e.g. Swift, Aqua)", categoryId: "cat-1" },
-  { id: "vt-3", name: "Luxury Sedan (e.g. Mercedes C, BMW 3)", categoryId: "cat-1" },
+  // Motorcycles
+  { id: "vt-1", name: "Motorcycle", categoryId: "cat-1" },
 
-  // SUVs
-  { id: "vt-4", name: "Compact SUV (e.g. Vezel, Raize)", categoryId: "cat-2" },
-  { id: "vt-5", name: "Full-size SUV (e.g. Land Cruiser, Prado)", categoryId: "cat-2" },
+  // Cars
+  { id: "vt-2", name: "Small Car (e.g. Alto)", categoryId: "cat-2" },
+  { id: "vt-3", name: "Regular Car", categoryId: "cat-2" },
+
+  // Cabs
+  { id: "vt-4", name: "Single Cab", categoryId: "cat-3" },
+  { id: "vt-5", name: "Double Cab", categoryId: "cat-3" },
 
   // Vans
-  { id: "vt-6", name: "Passenger Van (e.g. KDH, HiAce)", categoryId: "cat-3" },
+  { id: "vt-6", name: "Regular Van", categoryId: "cat-4" },
+  { id: "vt-7", name: "High Roof Van", categoryId: "cat-4" },
+  { id: "vt-8", name: "Mini Van (e.g. Suzuki Buddy)", categoryId: "cat-4" },
 
-  // Bikes
-  { id: "vt-7", name: "Standard Motorcycle", categoryId: "cat-4" },
+  // Buses
+  { id: "vt-9", name: "Small Bus (e.g. Rosa)", categoryId: "cat-5" },
+  { id: "vt-10", name: "Tata Long Bus", categoryId: "cat-5" },
+  { id: "vt-11", name: "Leyland Bus", categoryId: "cat-5" },
+
+  // Lorries
+  { id: "vt-12", name: "10 1/2 Lorry", categoryId: "cat-6" },
+  { id: "vt-13", name: "14 1/2 Lorry", categoryId: "cat-6" },
+
+  // Commercial Vehicles
+  { id: "vt-14", name: "Demo Batta", categoryId: "cat-7" },
+
+  // Tippers
+  { id: "vt-16", name: "Small Tipper", categoryId: "cat-8" },
+  { id: "vt-17", name: "Long Tipper", categoryId: "cat-8" },
 ];
 
 export const MOCK_SERVICE_PACKAGES: T.ServicePackageDto[] = [
@@ -132,28 +153,98 @@ export const MOCK_SERVICES: Record<string, T.AvailableServiceDto[]> = {
 export const MOCK_PARTS: Record<string, T.PartDto[]> = {
   // Keyed by componentId: parts compatible with this component
   "comp-1": [
-    { id: "part-101", brand: "Mobil 1", partNumber: "M1-5W30", name: "Synthetic 5W-30 (4L)" },
-    { id: "part-102", brand: "Castrol", partNumber: "MAG-10W40", name: "Magnatec 10W-40 (4L)" },
-    { id: "part-103", brand: "Shell", partNumber: "HX7-5W30", name: "Helix Ultra 5W-30 (4L)" },
-    { id: "part-104", brand: "Toyota Genuine", partNumber: "TG-0W20", name: "Motor Oil 0W-20 (4L)" },
+    {
+      id: "part-101",
+      brand: "Mobil 1",
+      partNumber: "M1-5W30",
+      name: "Synthetic 5W-30 (4L)",
+    },
+    {
+      id: "part-102",
+      brand: "Castrol",
+      partNumber: "MAG-10W40",
+      name: "Magnatec 10W-40 (4L)",
+    },
+    {
+      id: "part-103",
+      brand: "Shell",
+      partNumber: "HX7-5W30",
+      name: "Helix Ultra 5W-30 (4L)",
+    },
+    {
+      id: "part-104",
+      brand: "Toyota Genuine",
+      partNumber: "TG-0W20",
+      name: "Motor Oil 0W-20 (4L)",
+    },
   ],
   "comp-2": [
-    { id: "part-201", brand: "Vic", partNumber: "C-110", name: "Oil Filter Element" },
-    { id: "part-202", brand: "Toyota Genuine", partNumber: "90915-YZZE1", name: "OEM Oil Filter" },
-    { id: "part-203", brand: "Bosch", partNumber: "P3300", name: "Premium Oil Filter" },
+    {
+      id: "part-201",
+      brand: "Vic",
+      partNumber: "C-110",
+      name: "Oil Filter Element",
+    },
+    {
+      id: "part-202",
+      brand: "Toyota Genuine",
+      partNumber: "90915-YZZE1",
+      name: "OEM Oil Filter",
+    },
+    {
+      id: "part-203",
+      brand: "Bosch",
+      partNumber: "P3300",
+      name: "Premium Oil Filter",
+    },
   ],
   "comp-3": [
-    { id: "part-301", brand: "Denso", partNumber: "D-AF102", name: "Air Cleaner Element" },
-    { id: "part-302", brand: "Vic", partNumber: "A-198", name: "Air Filter Standard" },
-    { id: "part-303", brand: "Sakura", partNumber: "A-3301", name: "Heavy Duty Air Filter" },
+    {
+      id: "part-301",
+      brand: "Denso",
+      partNumber: "D-AF102",
+      name: "Air Cleaner Element",
+    },
+    {
+      id: "part-302",
+      brand: "Vic",
+      partNumber: "A-198",
+      name: "Air Filter Standard",
+    },
+    {
+      id: "part-303",
+      brand: "Sakura",
+      partNumber: "A-3301",
+      name: "Heavy Duty Air Filter",
+    },
   ],
   "comp-4": [
-    { id: "part-401", brand: "Bosch", partNumber: "C302", name: "Active Carbon Cabin Filter" },
-    { id: "part-402", brand: "Denso", partNumber: "D-CF05", name: "Anti-Bacterial Cabin Filter" },
+    {
+      id: "part-401",
+      brand: "Bosch",
+      partNumber: "C302",
+      name: "Active Carbon Cabin Filter",
+    },
+    {
+      id: "part-402",
+      brand: "Denso",
+      partNumber: "D-CF05",
+      name: "Anti-Bacterial Cabin Filter",
+    },
   ],
   "comp-5": [
-    { id: "part-501", brand: "Toyota Genuine", partNumber: "SLLC-50", name: "Super Long Life Coolant (4L)" },
-    { id: "part-502", brand: "Castrol", partNumber: "RAD-COOL", name: "Radicool Premix (4L)" },
+    {
+      id: "part-501",
+      brand: "Toyota Genuine",
+      partNumber: "SLLC-50",
+      name: "Super Long Life Coolant (4L)",
+    },
+    {
+      id: "part-502",
+      brand: "Castrol",
+      partNumber: "RAD-COOL",
+      name: "Radicool Premix (4L)",
+    },
   ],
 };
 
@@ -201,7 +292,9 @@ export const MOCK_REGISTERED_VEHICLES: T.VehicleDto[] = [
 // SIMULATED ENDPOINT HANDLERS
 // ============================================================================
 
-export async function lookupVehicles(plate: string): Promise<T.VehicleLookupResponse> {
+export async function lookupVehicles(
+  plate: string,
+): Promise<T.VehicleLookupResponse> {
   await delay(300);
   const normalized = plate.trim().toUpperCase();
 
@@ -209,7 +302,9 @@ export async function lookupVehicles(plate: string): Promise<T.VehicleLookupResp
     MOCK_REGISTERED_VEHICLES.find((v) => v.numberPlate === normalized) ?? null;
 
   const suggestions = MOCK_REGISTERED_VEHICLES.filter(
-    (v) => v.numberPlate.startsWith(normalized) || v.numberPlate.includes(normalized)
+    (v) =>
+      v.numberPlate.startsWith(normalized) ||
+      v.numberPlate.includes(normalized),
   ).map((v) => ({ id: v.id, numberPlate: v.numberPlate }));
 
   return { exactMatch, suggestions };
@@ -220,7 +315,9 @@ export async function getVehicleCategories(): Promise<T.VehicleCategoryDto[]> {
   return MOCK_CATEGORIES;
 }
 
-export async function getVehicleTypes(categoryId: string): Promise<T.VehicleTypeDto[]> {
+export async function getVehicleTypes(
+  categoryId: string,
+): Promise<T.VehicleTypeDto[]> {
   await delay(200);
   return MOCK_VEHICLE_TYPES.filter((vt) => vt.categoryId === categoryId);
 }
@@ -232,7 +329,7 @@ export async function getServicePackages(): Promise<T.ServicePackageDto[]> {
 
 export async function getAvailableServices(
   _typeId: string,
-  packageId: string
+  packageId: string,
 ): Promise<T.AvailableServiceDto[]> {
   await delay(300);
   return MOCK_SERVICES[packageId] ?? [];
@@ -240,14 +337,14 @@ export async function getAvailableServices(
 
 export async function getCompatibleParts(
   _typeId: string,
-  componentId: string
+  componentId: string,
 ): Promise<T.PartDto[]> {
   await delay(250);
   return MOCK_PARTS[componentId] ?? [];
 }
 
 export async function createServiceJob(
-  payload: T.CreateServiceJobPayload
+  payload: T.CreateServiceJobPayload,
 ): Promise<T.ServiceJobResponse> {
   await delay(600);
 
@@ -256,12 +353,13 @@ export async function createServiceJob(
   if (payload.vehicle.numberPlate === "CONFLICT-99" && !payload.vehicle.id) {
     throw new ApiError(
       409,
-      "Vehicle plate CONFLICT-99 was already registered by another staff member."
+      "Vehicle plate CONFLICT-99 was already registered by another staff member.",
     );
   }
 
   // Calculate mock cost
-  const calculatedCost = payload.totalCost !== undefined ? payload.totalCost : 12500;
+  const calculatedCost =
+    payload.totalCost !== undefined ? payload.totalCost : 12500;
 
   return {
     id: String(Math.floor(Math.random() * 90000) + 10000),
