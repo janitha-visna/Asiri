@@ -21,36 +21,116 @@ export const MOCK_CATEGORIES: T.VehicleCategoryDto[] = [
 
 export const MOCK_VEHICLE_TYPES: T.VehicleTypeDto[] = [
   // Motorcycles
-  { id: "vt-1", name: "Motorcycle", categoryId: "cat-1" },
+  {
+    id: "vt-1",
+    name: "Motorcycle",
+    categoryId: "cat-1",
+    description: "Examples: Bajaj Pulsar, Honda Dio, TVS Apache",
+  },
 
   // Cars
-  { id: "vt-2", name: "Small Car (e.g. Alto)", categoryId: "cat-2" },
-  { id: "vt-3", name: "Regular Car", categoryId: "cat-2" },
+  {
+    id: "vt-2",
+    name: "Small Car",
+    categoryId: "cat-2",
+    description: "Examples: Suzuki Alto, Suzuki Celerio, Perodua Axia",
+  },
+  {
+    id: "vt-3",
+    name: "Regular Car",
+    categoryId: "cat-2",
+    description: "Examples: Toyota Corolla, Honda Civic, Toyota Axio",
+  },
 
   // Cabs
-  { id: "vt-4", name: "Single Cab", categoryId: "cat-3" },
-  { id: "vt-5", name: "Double Cab", categoryId: "cat-3" },
+  {
+    id: "vt-4",
+    name: "Single Cab",
+    categoryId: "cat-3",
+    description: "Examples: Toyota Hilux Single Cab, Isuzu D-Max Single Cab",
+  },
+  {
+    id: "vt-5",
+    name: "Double Cab",
+    categoryId: "cat-3",
+    description: "Examples: Toyota Hilux Double Cab, Isuzu D-Max Double Cab",
+  },
 
   // Vans
-  { id: "vt-6", name: "Regular Van", categoryId: "cat-4" },
-  { id: "vt-7", name: "High Roof Van", categoryId: "cat-4" },
-  { id: "vt-8", name: "Mini Van (e.g. Suzuki Buddy)", categoryId: "cat-4" },
+  {
+    id: "vt-6",
+    name: "Regular Van",
+    categoryId: "cat-4",
+    description: "Examples: Toyota HiAce, Nissan Caravan",
+  },
+  {
+    id: "vt-7",
+    name: "High Roof Van",
+    categoryId: "cat-4",
+    description: "Examples: Toyota HiAce High Roof, Nissan Caravan High Roof",
+  },
+  {
+    id: "vt-8",
+    name: "Mini Van",
+    categoryId: "cat-4",
+    description: "Example: Suzuki Every (Buddy Van)",
+  },
 
   // Buses
-  { id: "vt-9", name: "Small Bus (e.g. Rosa)", categoryId: "cat-5" },
-  { id: "vt-10", name: "Tata Long Bus", categoryId: "cat-5" },
-  { id: "vt-11", name: "Leyland Bus", categoryId: "cat-5" },
+  {
+    id: "vt-9",
+    name: "Small Bus",
+    categoryId: "cat-5",
+    description: "Example: Mitsubishi Rosa",
+  },
+  {
+    id: "vt-10",
+    name: "Tata Long Bus",
+    categoryId: "cat-5",
+    description: "Example: Tata Marcopolo long bus",
+  },
+  {
+    id: "vt-11",
+    name: "Leyland Bus",
+    categoryId: "cat-5",
+    description: "Examples: Ashok Leyland Viking, Ashok Leyland Lynx",
+  },
 
   // Lorries
-  { id: "vt-12", name: "10 1/2 Lorry", categoryId: "cat-6" },
-  { id: "vt-13", name: "14 1/2 Lorry", categoryId: "cat-6" },
+  {
+    id: "vt-12",
+    name: "10 1/2 Lorry",
+    categoryId: "cat-6",
+    description: "Example: 10.5-foot-class goods lorry",
+  },
+  {
+    id: "vt-13",
+    name: "14 1/2 Lorry",
+    categoryId: "cat-6",
+    description: "Example: 14.5-foot-class goods lorry",
+  },
 
   // Commercial Vehicles
-  { id: "vt-14", name: "Demo Batta", categoryId: "cat-7" },
+  {
+    id: "vt-14",
+    name: "Demo Batta",
+    categoryId: "cat-7",
+    description: "Example: Commercial delivery vehicle (Dimo Batta)",
+  },
 
   // Tippers
-  { id: "vt-16", name: "Small Tipper", categoryId: "cat-8" },
-  { id: "vt-17", name: "Long Tipper", categoryId: "cat-8" },
+  {
+    id: "vt-16",
+    name: "Small Tipper",
+    categoryId: "cat-8",
+    description: "Example: Small tipper truck used for sand and soil transport",
+  },
+  {
+    id: "vt-17",
+    name: "Long Tipper",
+    categoryId: "cat-8",
+    description: "Example: Large tipper truck used for construction materials",
+  },
 ];
 
 export const MOCK_SERVICE_PACKAGES: T.ServicePackageDto[] = [
