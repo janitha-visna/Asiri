@@ -1,5 +1,10 @@
+import { DataEntryProvider } from "@/features/data-entry/DataEntryContext";
 import { ServiceJobScreen } from "@/features/data-entry/ServiceJobScreen";
 
 export default function DataEntryIndex() {
-  return <ServiceJobScreen />;
+  return (
+    <DataEntryProvider>
+      <ServiceJobScreen />
+    </DataEntryProvider>
+  );
 }

@@ -35,7 +35,7 @@ export function ServiceList() {
 
   if (!vehicleTypeId || !packageId) {
     return (
-      <View className="rounded-xl border border-dashed border-border bg-card/60 p-5 items-center gap-2">
+      <View className="rounded-xl border border-border bg-card p-5 items-center gap-2">
         <Text className="text-base font-bold text-muted-foreground">
           6. Services Checklist
         </Text>
