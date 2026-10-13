@@ -157,381 +157,250 @@ export function getVehicleClass(typeId?: string): VehicleClass {
   return "heavy"; // vt-9 to vt-17
 }
 
-export function getServicesForVehicleAndPackage(
-  typeId: string,
-  packageId: string,
-): T.AvailableServiceDto[] {
+export function getServicesForVehicle(typeId: string): T.AvailableServiceDto[] {
   const vehicleClass = getVehicleClass(typeId);
 
-  // 1. BODY WASH PACKAGE ("pkg-3")
-  // Only washing and exterior cleaning; no part replacement or oil services
-  if (packageId === "pkg-3") {
-    switch (vehicleClass) {
-      case "motorcycle":
-        return [
-          {
-            id: "srv-wash-moto-1",
-            name: "Motorcycle Pressure Wash & Chain Degreasing",
-            basePrice: "800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-moto-2",
-            name: "Foam Polish & Tyre Shine",
-            basePrice: "500.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "car":
-        return [
-          {
-            id: "srv-wash-car-1",
-            name: "Body Wash with Snow Foam",
-            basePrice: "1800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-car-2",
-            name: "Under-Chassis Pressure Wash",
-            basePrice: "1200.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-car-3",
-            name: "Interior Vacuum & Dashboard Polish",
-            basePrice: "1500.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "van_cab":
-        return [
-          {
-            id: "srv-wash-van-1",
-            name: "Body Wash with Snow Foam (Van/Cab)",
-            basePrice: "2400.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-van-2",
-            name: "Under-Chassis Mud Blaster Wash",
-            basePrice: "1800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-van-3",
-            name: "Interior Vacuum & Mat Cleaning",
-            basePrice: "1800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "heavy":
-        return [
-          {
-            id: "srv-wash-hvy-1",
-            name: "Commercial High-Pressure Body Wash",
-            basePrice: "4500.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-wash-hvy-2",
-            name: "Under-Chassis & Tipper Bed Washout",
-            basePrice: "3500.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-    }
-  }
-
-  // 2. NORMAL SERVICE PACKAGE ("pkg-2")
-  // Routine maintenance: Engine Oil + Oil Filter, Air Filter inspection/replacement, Wash
-  if (packageId === "pkg-2") {
-    switch (vehicleClass) {
-      case "motorcycle":
-        return [
-          {
-            id: "srv-norm-moto-1",
-            name: "Engine Oil & Filter Change (Motorcycle)",
-            basePrice: "1200.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
-          },
-          {
-            id: "srv-norm-moto-2",
-            name: "Air Filter Cleaning / Inspection",
-            basePrice: "500.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-norm-moto-3",
-            name: "Chain Lubrication & Tension Adjustment",
-            basePrice: "600.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-          {
-            id: "srv-norm-moto-4",
-            name: "Standard Body Wash",
-            basePrice: "800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "car":
-        return [
-          {
-            id: "srv-norm-car-1",
-            name: "Engine Oil & Filter Change",
-            basePrice: "3500.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
-          },
-          {
-            id: "srv-norm-car-2",
-            name: "Air Filter Replacement",
-            basePrice: "1200.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.airFilter],
-          },
-          {
-            id: "srv-norm-car-3",
-            name: "Body Wash with Snow Foam",
-            basePrice: "1800.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "van_cab":
-        return [
-          {
-            id: "srv-norm-van-1",
-            name: "Diesel Engine Oil & Filter Change",
-            basePrice: "4500.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
-          },
-          {
-            id: "srv-norm-van-2",
-            name: "Air Filter Replacement",
-            basePrice: "1500.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.airFilter],
-          },
-          {
-            id: "srv-norm-van-3",
-            name: "Body Wash with Snow Foam",
-            basePrice: "2400.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-      case "heavy":
-        return [
-          {
-            id: "srv-norm-hvy-1",
-            name: "Heavy Duty Engine Oil & Filter Change",
-            basePrice: "7500.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
-          },
-          {
-            id: "srv-norm-hvy-2",
-            name: "Heavy Duty Air Filter Replacement",
-            basePrice: "2500.00",
-            requiresPartSelection: true,
-            components: [MOCK_COMPONENTS.airFilter],
-          },
-          {
-            id: "srv-norm-hvy-3",
-            name: "Greasing & High-Pressure Wash",
-            basePrice: "4000.00",
-            requiresPartSelection: false,
-            components: [],
-          },
-        ];
-    }
-  }
-
-  // 3. FULL SERVICE PACKAGE ("pkg-1") (default)
-  // Comprehensive maintenance including filters, coolant, inspection & full wash
   switch (vehicleClass) {
     case "motorcycle":
       return [
         {
-          id: "srv-full-moto-1",
+          id: "srv-moto-1",
           name: "Engine Oil & Filter Change (Motorcycle)",
-          basePrice: "1500.00",
+          basePrice: "1200.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
         },
         {
-          id: "srv-full-moto-2",
+          id: "srv-moto-2",
           name: "Air Filter Replacement",
           basePrice: "800.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.airFilter],
         },
         {
-          id: "srv-full-moto-3",
+          id: "srv-moto-3",
+          name: "Chain Lubrication & Tension Adjustment",
+          basePrice: "600.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-moto-4",
           name: "Chain Degreasing, Greasing & Sprocket Check",
           basePrice: "1000.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-moto-4",
+          id: "srv-moto-5",
           name: "Brake Pad Inspection & Bleeding",
           basePrice: "1200.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-moto-5",
-          name: "Full Detail Wash & Wax",
-          basePrice: "1500.00",
+          id: "srv-moto-6",
+          name: "Motorcycle Pressure Wash & Chain Degreasing",
+          basePrice: "800.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-moto-7",
+          name: "Foam Polish & Tyre Shine",
+          basePrice: "500.00",
           requiresPartSelection: false,
           components: [],
         },
       ];
+
     case "car":
       return [
         {
-          id: "srv-full-car-1",
+          id: "srv-car-1",
           name: "Engine Oil & Filter Change",
-          basePrice: "4500.00",
+          basePrice: "3500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
         },
         {
-          id: "srv-full-car-2",
+          id: "srv-car-2",
           name: "Air Filter Replacement",
-          basePrice: "1500.00",
+          basePrice: "1200.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.airFilter],
         },
         {
-          id: "srv-full-car-3",
+          id: "srv-car-3",
           name: "Cabin A/C Filter Replacement",
           basePrice: "1800.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.cabinFilter],
         },
         {
-          id: "srv-full-car-4",
+          id: "srv-car-4",
           name: "Engine Coolant Flush & Top-up",
           basePrice: "2200.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.coolant],
         },
         {
-          id: "srv-full-car-5",
+          id: "srv-car-5",
+          name: "Body Wash with Snow Foam",
+          basePrice: "1800.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-car-6",
+          name: "Under-Chassis Pressure Wash",
+          basePrice: "1200.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-car-7",
           name: "Complete Undercarriage Wash & Greasing",
           basePrice: "3000.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-car-6",
+          id: "srv-car-8",
+          name: "Interior Vacuum & Dashboard Polish",
+          basePrice: "1500.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-car-9",
           name: "Brake Pad Inspection & Cleaning",
           basePrice: "2500.00",
           requiresPartSelection: false,
           components: [],
         },
       ];
+
     case "van_cab":
       return [
         {
-          id: "srv-full-van-1",
+          id: "srv-van-1",
           name: "Diesel Engine Oil & Filter Change",
-          basePrice: "5500.00",
+          basePrice: "4500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
         },
         {
-          id: "srv-full-van-2",
+          id: "srv-van-2",
           name: "Air Filter Replacement",
-          basePrice: "1800.00",
+          basePrice: "1500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.airFilter],
         },
         {
-          id: "srv-full-van-3",
+          id: "srv-van-3",
           name: "Cabin A/C Filter Replacement",
           basePrice: "2000.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.cabinFilter],
         },
         {
-          id: "srv-full-van-4",
+          id: "srv-van-4",
           name: "Engine Coolant Flush & Top-up",
           basePrice: "2500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.coolant],
         },
         {
-          id: "srv-full-van-5",
+          id: "srv-van-5",
+          name: "Body Wash with Snow Foam (Van/Cab)",
+          basePrice: "2400.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-van-6",
+          name: "Under-Chassis Mud Blaster Wash",
+          basePrice: "1800.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-van-7",
           name: "Full Undercarriage Wash & Greasing",
           basePrice: "3500.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-van-6",
+          id: "srv-van-8",
+          name: "Interior Vacuum & Mat Cleaning",
+          basePrice: "1800.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-van-9",
           name: "Brake Inspection & Adjustment",
           basePrice: "2800.00",
           requiresPartSelection: false,
           components: [],
         },
       ];
+
     case "heavy":
       return [
         {
-          id: "srv-full-hvy-1",
+          id: "srv-hvy-1",
           name: "Heavy Duty Engine Oil & Filter Change",
-          basePrice: "9000.00",
+          basePrice: "7500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.engineOil, MOCK_COMPONENTS.oilFilter],
         },
         {
-          id: "srv-full-hvy-2",
+          id: "srv-hvy-2",
           name: "Heavy Duty Air Filter Replacement",
-          basePrice: "3500.00",
+          basePrice: "2500.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.airFilter],
         },
         {
-          id: "srv-full-hvy-3",
+          id: "srv-hvy-3",
           name: "Heavy Duty Coolant Flush & Top-up",
           basePrice: "4000.00",
           requiresPartSelection: true,
           components: [MOCK_COMPONENTS.coolant],
         },
         {
-          id: "srv-full-hvy-4",
+          id: "srv-hvy-4",
           name: "Full Chassis Greasing (24 Points)",
           basePrice: "5000.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-hvy-5",
+          id: "srv-hvy-5",
+          name: "Commercial High-Pressure Body Wash",
+          basePrice: "4500.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-hvy-6",
+          name: "Under-Chassis & Tipper Bed Washout",
+          basePrice: "3500.00",
+          requiresPartSelection: false,
+          components: [],
+        },
+        {
+          id: "srv-hvy-7",
           name: "Commercial High-Pressure Wash & Chassis Blast",
           basePrice: "5500.00",
           requiresPartSelection: false,
           components: [],
         },
         {
-          id: "srv-full-hvy-6",
+          id: "srv-hvy-8",
           name: "Air Brake System Inspection & Purge",
           basePrice: "4000.00",
           requiresPartSelection: false,
@@ -543,9 +412,7 @@ export function getServicesForVehicleAndPackage(
 
 // Fallback compatibility map for static lookups
 export const MOCK_SERVICES: Record<string, T.AvailableServiceDto[]> = {
-  "pkg-1": getServicesForVehicleAndPackage("vt-3", "pkg-1"),
-  "pkg-2": getServicesForVehicleAndPackage("vt-3", "pkg-2"),
-  "pkg-3": getServicesForVehicleAndPackage("vt-3", "pkg-3"),
+  default: getServicesForVehicle("vt-3"),
 };
 
 // Parts catalog partitioned by vehicle classification and component
@@ -956,10 +823,10 @@ export async function getServicePackages(): Promise<T.ServicePackageDto[]> {
 
 export async function getAvailableServices(
   typeId: string,
-  packageId: string,
+  _packageId?: string,
 ): Promise<T.AvailableServiceDto[]> {
   await delay(300);
-  return getServicesForVehicleAndPackage(typeId, packageId);
+  return getServicesForVehicle(typeId);
 }
 
 export async function getCompatibleParts(

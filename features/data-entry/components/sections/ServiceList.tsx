@@ -14,12 +14,11 @@ export function ServiceList() {
   const { draft, dispatch } = useDataEntryContext();
 
   const vehicleTypeId = draft.vehicle.vehicleTypeId;
-  const packageId = draft.servicePackageId;
 
   const {
     data: services = [],
     isLoading,
-  } = useAvailableServices(vehicleTypeId ?? undefined, packageId ?? undefined);
+  } = useAvailableServices(vehicleTypeId ?? undefined);
 
   // State to manage active PartPickerModal
   const [activePicker, setActivePicker] = useState<{
@@ -33,16 +32,14 @@ export function ServiceList() {
 
   const selectedCount = Object.keys(draft.services).length;
 
-  if (!vehicleTypeId || !packageId) {
+  if (!vehicleTypeId) {
     return (
       <View className="rounded-xl border border-border bg-card p-5 items-center gap-2">
         <Text className="text-base font-bold text-muted-foreground">
           6. Services Checklist
         </Text>
         <Text className="text-xs text-center text-muted-foreground">
-          {!vehicleTypeId
-            ? "Please select a vehicle category and type above to see services."
-            : "Please select a service package to load available services."}
+          Please select a vehicle category and type above to see services.
         </Text>
       </View>
     );

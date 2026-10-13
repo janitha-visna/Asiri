@@ -14,8 +14,8 @@ export const dataEntryKeys = {
   vehicleTypes: (categoryId: string) =>
     [...dataEntryKeys.all, "vehicle-types", categoryId] as const,
   servicePackages: () => [...dataEntryKeys.all, "service-packages"] as const,
-  availableServices: (typeId: string, packageId: string) =>
-    [...dataEntryKeys.all, "available-services", typeId, packageId] as const,
+  availableServices: (typeId: string, _packageId?: string) =>
+    [...dataEntryKeys.all, "available-services", typeId] as const,
   compatibleParts: (typeId: string, componentId: string) =>
     [...dataEntryKeys.all, "compatible-parts", typeId, componentId] as const,
 };
@@ -78,13 +78,13 @@ export function useServicePackages() {
 }
 
 /**
- * 5. Available Specific Services for Vehicle Type + Package
+ * 5. Available Specific Services for Vehicle Type
  */
-export function useAvailableServices(typeId?: string, packageId?: string) {
+export function useAvailableServices(typeId?: string, _packageId?: string) {
   const queryResult = useQuery({
-    queryKey: dataEntryKeys.availableServices(typeId ?? "", packageId ?? ""),
-    queryFn: () => api.getAvailableServices(typeId!, packageId!),
-    enabled: Boolean(typeId && packageId),
+    queryKey: dataEntryKeys.availableServices(typeId ?? ""),
+    queryFn: ({ signal }) => api.getAvailableServices(typeId!, undefined, signal),
+    enabled: Boolean(typeId),
     staleTime: 1000 * 60 * 10,
   });
 

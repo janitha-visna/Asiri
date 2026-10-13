@@ -228,11 +228,9 @@ export function draftReducer(
 
     case "PACKAGE_SELECTED":
       if (action.packageId === state.servicePackageId) return state;
-      // When package changes, reset selected services
       return {
         ...state,
         servicePackageId: action.packageId,
-        services: {},
       };
 
     case "SERVICE_TOGGLED": {

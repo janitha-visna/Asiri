@@ -19,8 +19,7 @@ export function SaveBar() {
   const { draft, dispatch } = useDataEntryContext();
 
   const { data: services = [] } = useAvailableServices(
-    draft.vehicle.vehicleTypeId ?? undefined,
-    draft.servicePackageId ?? undefined
+    draft.vehicle.vehicleTypeId ?? undefined
   );
 
   const mutation = useCreateServiceJobMutation();

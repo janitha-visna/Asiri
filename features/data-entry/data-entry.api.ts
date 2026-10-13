@@ -48,15 +48,17 @@ export async function getServicePackages(): Promise<T.ServicePackageDto[]> {
 }
 
 /**
- * 5. Available Specific Services for vehicleType + packageId
+ * 5. Available Specific Services for vehicleType
  */
 export async function getAvailableServices(
   typeId: string,
-  packageId: string
+  packageId?: string,
+  signal?: AbortSignal
 ): Promise<T.AvailableServiceDto[]> {
   if (USE_MOCKS) return mocks.getAvailableServices(typeId, packageId);
   return apiRequest<T.AvailableServiceDto[]>(
-    `/vehicle-types/${typeId}/services?packageId=${encodeURIComponent(packageId)}`
+    `/vehicle-types/${typeId}/services`,
+    { signal }
   );
 }
 

@@ -1,4 +1,4 @@
-﻿// features/data-entry/components/sections/PriceSection.tsx
+// features/data-entry/components/sections/PriceSection.tsx
 import React from "react";
 import { View } from "react-native";
 import { Input } from "@/components/ui/input";
@@ -12,8 +12,7 @@ export function PriceSection() {
   const { draft, dispatch } = useDataEntryContext();
 
   const { data: services = [] } = useAvailableServices(
-    draft.vehicle.vehicleTypeId ?? undefined,
-    draft.servicePackageId ?? undefined
+    draft.vehicle.vehicleTypeId ?? undefined
   );
 
   const estimatedCost = estimateCost(draft, services);
