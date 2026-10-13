@@ -19,7 +19,7 @@ export const createInitialDraft = (): ServiceJobDraft => ({
   },
   customer: {
     id: null,
-    name: "",
+    name: "Walk-in Customer",
     phones: [{ key: newKey(), number: "", isPrimary: true }],
   },
   jobDate: todayString(),

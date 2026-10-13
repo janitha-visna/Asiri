@@ -1,4 +1,4 @@
-﻿// features/data-entry/components/sections/CustomerSection.tsx
+// features/data-entry/components/sections/CustomerSection.tsx
 import React from "react";
 import { View } from "react-native";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,7 @@ export function CustomerSection() {
           Customer Full Name
         </Text>
         <Input
-          placeholder="e.g., Sunil Perera"
+          placeholder="e.g., Walk-in Customer or Sunil Perera"
           value={draft.customer.name}
           onChangeText={(name) => dispatch({ type: "CUSTOMER_NAME_CHANGED", name })}
         />
