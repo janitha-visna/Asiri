@@ -135,9 +135,8 @@ export const MOCK_VEHICLE_TYPES: T.VehicleTypeDto[] = [
 
 export const MOCK_SERVICE_PACKAGES: T.ServicePackageDto[] = [
   { id: "pkg-1", name: "Full Service" },
-  { id: "pkg-2", name: "Body Wash & Vacuum" },
-  { id: "pkg-3", name: "Lubrication & Inspection" },
-  { id: "pkg-4", name: "Normal Wash" },
+  { id: "pkg-2", name: "Normal Service" },
+  { id: "pkg-3", name: "Body Wash" },
 ];
 
 export const MOCK_COMPONENTS: Record<string, T.ComponentDto> = {
