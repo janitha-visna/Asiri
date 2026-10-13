@@ -80,7 +80,7 @@ export function ServiceList() {
             return (
               <View
                 key={service.id}
-                className={`rounded-lg border p-3 gap-2.5 transition-colors ${
+                className={`rounded-lg border p-3 gap-2.5 ${
                   isSelected
                     ? "border-primary bg-primary/5"
                     : "border-border bg-background"

@@ -91,7 +91,7 @@ const Select = React.forwardRef<View, SelectProps>(
                         className={cn(
                           "text-xs mt-0.5",
                           value === item.value
-                            ? "text-primary-foreground/80"
+                            ? "text-primary-foreground opacity-80"
                             : "text-muted-foreground"
                         )}
                       >

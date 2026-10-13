@@ -101,10 +101,8 @@ export function SaveBar() {
           size="lg"
           disabled={!isValid || mutation.isPending}
           onPress={handleSave}
-          className={`min-w-[160px] ${
-            !isValid || mutation.isPending
-              ? "opacity-50 bg-muted"
-              : "bg-green-600 active:bg-green-700"
+          className={`min-w-[160px] bg-green-600 ${
+            !isValid || mutation.isPending ? "opacity-50" : ""
           }`}
         >
           {mutation.isPending ? (
