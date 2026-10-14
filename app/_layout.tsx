@@ -87,6 +87,13 @@ export default function RootLayout() {
               title: "Inventory Usage",
             }}
           />
+          <Drawer.Screen
+            name="service-pricing"
+            options={{
+              drawerLabel: "Service Pricing",
+              title: "Service Pricing Master",
+            }}
+          />
         </Drawer>
         <PortalHost />
       </InventoryProvider>
