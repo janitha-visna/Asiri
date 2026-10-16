@@ -1,25 +1,34 @@
 // features/service-pricing/service-pricing.types.ts
 
-export type VehicleCategory = {
+export type MatrixVehicleType = {
   id: string;
   name: string;
 };
 
-export type VehicleType = {
-  id: string;
+export type MatrixCategory = {
   categoryId: string;
-  name: string;
-  description?: string;
+  categoryName: string;
+  vehicleTypes: MatrixVehicleType[];
 };
 
-export type ServicePackage = {
+export type MatrixService = {
   id: string;
   name: string;
-  description: string;
 };
 
-export type ServicePackagePrice = {
-  vehicleTypeId: string;
-  servicePackageId: string;
-  basePrice: string | null; // e.g. "4000.00", or null if not yet defined
+export type ServicePricesMatrixResponse = {
+  categories: MatrixCategory[];
+  services: MatrixService[];
+  prices: Record<string, number | null>; // Format: `${serviceId}_${vehicleTypeId}`: price
 };
+
+export type UpdatePriceItem = {
+  serviceId: string;
+  vehicleTypeId: string;
+  price: number;
+};
+
+export type UpdateServicePricesPayload = {
+  prices: UpdatePriceItem[];
+};
+
