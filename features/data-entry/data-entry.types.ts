@@ -53,20 +53,41 @@ export type PhoneDto = {
 export type CustomerDto = {
   id: Id;
   name: string;
-  phones: PhoneDto[];
+  phoneNumbers?: PhoneDto[];
+  phones?: PhoneDto[];
+};
+
+export type VehicleServicePriceDto = {
+  serviceId: Id;
+  name: string;
+  price: number;
 };
 
 export type VehicleDto = {
   id: Id;
   numberPlate: string;
   category: VehicleCategoryDto;
-  vehicleType: VehicleTypeDto;
+  vehicleType: {
+    id: Id;
+    name: string;
+    categoryId?: Id;
+    description?: string;
+  };
   customer: CustomerDto;
+  services?: VehicleServicePriceDto[];
+};
+
+export type VehicleLookupSuggestionDto = {
+  id: Id;
+  numberPlate: string;
+  vehicleTypeName?: string;
+  customerName?: string;
 };
 
 export type VehicleLookupResponse = {
+  isRegistered?: boolean;
   exactMatch: VehicleDto | null;
-  suggestions: { id: Id; numberPlate: string }[];
+  suggestions: VehicleLookupSuggestionDto[];
 };
 
 export type ServicePackageDto = {

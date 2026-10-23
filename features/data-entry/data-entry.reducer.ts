@@ -82,6 +82,7 @@ export function draftReducer(
 
     case "VEHICLE_MATCHED": {
       const v = action.vehicle;
+      const rawPhones = v.customer.phoneNumbers ?? v.customer.phones ?? [];
       return {
         ...state,
         vehicle: {
@@ -95,8 +96,8 @@ export function draftReducer(
           id: v.customer.id,
           name: v.customer.name,
           phones:
-            v.customer.phones.length > 0
-              ? v.customer.phones.map((p) => ({
+            rawPhones.length > 0
+              ? rawPhones.map((p) => ({
                   key: newKey(),
                   id: p.id,
                   number: p.phoneNumber,

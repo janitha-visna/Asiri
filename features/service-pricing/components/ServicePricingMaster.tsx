@@ -131,6 +131,10 @@ export function ServicePricingMaster() {
         ],
       });
       setEditingTarget(null);
+      Alert.alert(
+        "Successfully Updated",
+        `${editingTarget.service.name} price for ${editingTarget.vehicleType.name} has been updated to Rs. ${parsedPrice.toFixed(2)}.`
+      );
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to update price";

@@ -799,9 +799,18 @@ export async function lookupVehicles(
     (v) =>
       v.numberPlate.startsWith(normalized) ||
       v.numberPlate.includes(normalized),
-  ).map((v) => ({ id: v.id, numberPlate: v.numberPlate }));
+  ).map((v) => ({
+    id: v.id,
+    numberPlate: v.numberPlate,
+    vehicleTypeName: v.vehicleType.name,
+    customerName: v.customer.name,
+  }));
 
-  return { exactMatch, suggestions };
+  return {
+    isRegistered: exactMatch !== null,
+    exactMatch,
+    suggestions,
+  };
 }
 
 export async function getVehicleCategories(): Promise<T.VehicleCategoryDto[]> {

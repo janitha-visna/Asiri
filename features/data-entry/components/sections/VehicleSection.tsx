@@ -147,9 +147,16 @@ export function VehicleSection() {
                   onPress={() => handleSelectSuggestion(v.numberPlate)}
                   className="rounded-md border border-border bg-background px-2.5 py-1.5 active:bg-accent"
                 >
-                  <Text className="text-xs font-semibold text-foreground">
+                  <Text className="text-xs font-bold text-foreground">
                     {v.numberPlate}
                   </Text>
+                  {(v.vehicleTypeName || v.customerName) && (
+                    <Text className="text-[10px] text-muted-foreground mt-0.5">
+                      {[v.vehicleTypeName, v.customerName]
+                        .filter(Boolean)
+                        .join(" • ")}
+                    </Text>
+                  )}
                 </Pressable>
               ))}
             </View>
@@ -165,8 +172,10 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5">
               <Text className="text-sm font-medium text-foreground">
-                {categories.find((c) => c.id === draft.vehicle.categoryId)
-                  ?.name ?? "Registered Category"}
+                {lookupData?.exactMatch?.category?.name ??
+                  categories.find((c) => c.id === draft.vehicle.categoryId)
+                    ?.name ??
+                  "Registered Category"}
               </Text>
             </View>
           ) : (
@@ -188,11 +197,15 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5 gap-1">
               <Text className="text-sm font-medium text-foreground">
-                {selectedVehicleType?.name ?? "Registered Type"}
+                {lookupData?.exactMatch?.vehicleType?.name ??
+                  selectedVehicleType?.name ??
+                  "Registered Type"}
               </Text>
-              {selectedVehicleType?.description ? (
+              {(lookupData?.exactMatch?.vehicleType?.description ??
+                selectedVehicleType?.description) ? (
                 <Text className="text-xs text-muted-foreground">
-                  {selectedVehicleType.description}
+                  {lookupData?.exactMatch?.vehicleType?.description ??
+                    selectedVehicleType?.description}
                 </Text>
               ) : null}
             </View>
