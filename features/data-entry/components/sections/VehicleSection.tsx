@@ -18,12 +18,15 @@ export function VehicleSection() {
   const { draft, dispatch } = useDataEntryContext();
   const debouncedPlate = useDebouncedValue(draft.vehicle.numberPlate, 300);
 
+  const isRegistered = draft.vehicle.mode === "registered";
+
   const { data: lookupData, isLoading: isLookupLoading } =
     useVehicleLookup(debouncedPlate);
 
-  const { data: categories = [] } = useVehicleCategories();
+  const { data: categories = [] } = useVehicleCategories(!isRegistered);
   const { data: vehicleTypes = [] } = useVehicleTypes(
     draft.vehicle.categoryId ?? undefined,
+    !isRegistered,
   );
 
   // When exact match is detected from the lookup, auto-fill vehicle & customer if not already registered
@@ -76,8 +79,6 @@ export function VehicleSection() {
   const handleResetVehicle = () => {
     dispatch({ type: "PLATE_CHANGED", plate: "" });
   };
-
-  const isRegistered = draft.vehicle.mode === "registered";
 
   return (
     <View className="rounded-xl border border-border bg-card p-4 gap-4 shadow-sm">
@@ -172,7 +173,8 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5">
               <Text className="text-sm font-medium text-foreground">
-                {lookupData?.exactMatch?.category?.name ??
+                {draft.vehicle.categoryName ??
+                  lookupData?.exactMatch?.category?.name ??
                   categories.find((c) => c.id === draft.vehicle.categoryId)
                     ?.name ??
                   "Registered Category"}
@@ -197,7 +199,8 @@ export function VehicleSection() {
           {isRegistered ? (
             <View className="rounded-md border border-input bg-muted/30 px-3 py-2.5 gap-1">
               <Text className="text-sm font-medium text-foreground">
-                {lookupData?.exactMatch?.vehicleType?.name ??
+                {draft.vehicle.vehicleTypeName ??
+                  lookupData?.exactMatch?.vehicleType?.name ??
                   selectedVehicleType?.name ??
                   "Registered Type"}
               </Text>
