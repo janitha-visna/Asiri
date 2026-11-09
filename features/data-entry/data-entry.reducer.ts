@@ -15,7 +15,9 @@ export const createInitialDraft = (): ServiceJobDraft => ({
     id: null,
     numberPlate: "",
     categoryId: null,
+    categoryName: null,
     vehicleTypeId: null,
+    vehicleTypeName: null,
   },
   customer: {
     id: null,
@@ -90,7 +92,9 @@ export function draftReducer(
           id: v.id,
           numberPlate: v.numberPlate,
           categoryId: v.category.id,
+          categoryName: v.category.name,
           vehicleTypeId: v.vehicleType.id,
+          vehicleTypeName: v.vehicleType.name,
         },
         customer: {
           id: v.customer.id,

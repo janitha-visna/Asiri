@@ -2,6 +2,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as api from "../data-entry.api";
 import type * as T from "../data-entry.types";
+import { getServicePricesMatrix } from "@/features/service-pricing/service-pricing.api";
+import { servicePricingKeys } from "@/features/service-pricing/hooks/useServicePricing";
 
 /**
  * Query Keys factory for predictable caching and invalidation
@@ -38,32 +40,46 @@ export function useVehicleLookup(debouncedPlate: string) {
 }
 
 /**
- * 2. Vehicle Categories Query
+ * 2. Vehicle Categories Query (derived from GET /service-prices/matrix)
+ * Only runs when the vehicle is NOT already registered.
  */
-export function useVehicleCategories() {
-  const queryResult = useQuery({
-    queryKey: dataEntryKeys.categories(),
-    queryFn: api.getVehicleCategories,
-    staleTime: 1000 * 60 * 15, // 15 minutes (static catalog)
+export function useVehicleCategories(enabled = true) {
+  return useQuery({
+    queryKey: servicePricingKeys.matrix(),
+    queryFn: ({ signal }) => getServicePricesMatrix(signal),
+    enabled,
+    staleTime: 1000 * 60 * 15,
+    select: (matrix): T.VehicleCategoryDto[] =>
+      matrix.categories.map((c) => ({
+        id: c.categoryId,
+        name: c.categoryName,
+      })),
   });
-
-  return queryResult;
 }
 
 /**
- * 3. Vehicle Types for Selected Category (Cascading)
+ * 3. Vehicle Types for Selected Category (derived from GET /service-prices/matrix)
+ * Zero extra API calls when switching category!
  */
-export function useVehicleTypes(categoryId?: string) {
-  const queryResult = useQuery({
-    queryKey: dataEntryKeys.vehicleTypes(categoryId ?? ""),
-    queryFn: () => api.getVehicleTypes(categoryId!),
-    enabled: Boolean(categoryId),
+export function useVehicleTypes(categoryId?: string, enabled = true) {
+  return useQuery({
+    queryKey: servicePricingKeys.matrix(),
+    queryFn: ({ signal }) => getServicePricesMatrix(signal),
+    enabled: enabled && Boolean(categoryId),
     staleTime: 1000 * 60 * 15,
+    select: (matrix): T.VehicleTypeDto[] => {
+      const category = matrix.categories.find(
+        (c) => c.categoryId === categoryId,
+      );
+      if (!category) return [];
+      return category.vehicleTypes.map((vt) => ({
+        id: vt.id,
+        name: vt.name,
+        categoryId: category.categoryId,
+      }));
+    },
   });
-
-  return queryResult;
 }
-
 /**
  * 4. Primary Service Packages Query
  */

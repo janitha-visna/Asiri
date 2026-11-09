@@ -41,7 +41,7 @@ export type VehicleTypeDto = {
   id: Id;
   name: string;
   categoryId: Id;
-  description: string;
+  description?: string;
 };
 
 export type PhoneDto = {
@@ -164,7 +164,9 @@ export type ServiceJobDraft = {
     id: Id | null; // null if vehicle is new
     numberPlate: string; // Normalized uppercase string
     categoryId: Id | null;
+    categoryName?: string | null;
     vehicleTypeId: Id | null;
+    vehicleTypeName?: string | null;
   };
   customer: {
     id: Id | null; // null if customer is new
