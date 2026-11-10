@@ -93,6 +93,7 @@ export type VehicleLookupResponse = {
 export type ServicePackageDto = {
   id: Id;
   name: string;
+  price?: number;
   isActive?: boolean;
 };
 

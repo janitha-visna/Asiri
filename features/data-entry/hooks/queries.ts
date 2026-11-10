@@ -81,16 +81,26 @@ export function useVehicleTypes(categoryId?: string, enabled = true) {
   });
 }
 /**
- * 4. Primary Service Packages Query
+ * 4. Primary Service Packages Query (derived from GET /service-prices/matrix)
+ * Loads the available service packages (Full Service, Normal Service, Body Wash)
+ * and their price for the selected vehicleTypeId.
  */
-export function useServicePackages() {
-  const queryResult = useQuery({
-    queryKey: dataEntryKeys.servicePackages(),
-    queryFn: api.getServicePackages,
+export function useServicePackages(vehicleTypeId?: string) {
+  return useQuery({
+    queryKey: servicePricingKeys.matrix(),
+    queryFn: ({ signal }) => getServicePricesMatrix(signal),
+    enabled: Boolean(vehicleTypeId),
     staleTime: 1000 * 60 * 15,
+    select: (matrix): T.ServicePackageDto[] => {
+      if (!vehicleTypeId) return [];
+      return matrix.services.map((s) => ({
+        id: s.id,
+        name: s.name,
+        price: matrix.prices[`${s.id}_${vehicleTypeId}`],
+        isActive: true,
+      }));
+    },
   });
-
-  return queryResult;
 }
 
 /**
