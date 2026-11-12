@@ -92,7 +92,7 @@ export function PartPickerModal({
                   <Pressable
                     key={part.id}
                     onPress={() => handleSelectPart(part.id)}
-                    className={`flex-row items-center justify-between rounded-lg border p-3 mb-2 active:bg-accent ${
+                    className={`flex-row items-center justify-between rounded-lg border p-3 mb-2 ${
                       isSelected
                         ? "border-primary bg-primary/10"
                         : "border-border bg-background"

@@ -106,7 +106,7 @@ export function JobDateSection() {
           setTempDate(parseDateString(draft.jobDate));
           setIsModalOpen(true);
         }}
-        className="flex-row items-center justify-between rounded-lg border border-input bg-background/50 px-3.5 py-3 active:bg-muted/30"
+        className="flex-row items-center justify-between rounded-lg border border-input bg-background/50 px-3.5 py-3"
       >
         <View>
           <Text className="text-xs text-muted-foreground">Selected Date</Text>

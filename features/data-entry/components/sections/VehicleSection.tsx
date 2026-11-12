@@ -146,7 +146,7 @@ export function VehicleSection() {
                 <Pressable
                   key={v.id}
                   onPress={() => handleSelectSuggestion(v.numberPlate)}
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 active:bg-accent"
+                  className="rounded-md border border-border bg-background px-2.5 py-1.5"
                 >
                   <Text className="text-xs font-bold text-foreground">
                     {v.numberPlate}

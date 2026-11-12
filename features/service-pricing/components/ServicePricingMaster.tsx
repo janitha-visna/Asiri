@@ -171,7 +171,7 @@ export function ServicePricingMaster() {
                   className={`flex-row items-center gap-1.5 px-3.5 py-2 rounded-full border ${
                     isSelected
                       ? "bg-primary border-primary shadow-sm"
-                      : "bg-card border-border active:bg-muted"
+                      : "bg-card border-border"
                   }`}
                 >
                   <Text className="text-sm">{getCategoryEmoji(cat.categoryName)}</Text>
@@ -293,7 +293,7 @@ export function ServicePricingMaster() {
                                 priceVal
                               )
                             }
-                            className={`flex-row items-center justify-end gap-1.5 rounded-lg border px-3 py-1.5 active:opacity-80 ${
+                            className={`flex-row items-center justify-end gap-1.5 rounded-lg border px-3 py-1.5 ${
                               hasPrice
                                 ? "border-border bg-muted/50"
                                 : "border-dashed border-amber-500/50 bg-amber-500/10"
@@ -351,7 +351,7 @@ export function ServicePricingMaster() {
               </View>
               <Pressable
                 onPress={() => setEditingTarget(null)}
-                className="rounded-full p-1 active:bg-muted"
+                className="rounded-full p-1"
               >
                 <Text className="text-base text-muted-foreground font-bold">✕</Text>
               </Pressable>
