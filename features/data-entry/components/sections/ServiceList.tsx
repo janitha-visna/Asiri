@@ -1,24 +1,20 @@
 // features/data-entry/components/sections/ServiceList.tsx
-import React, { useState } from "react";
-import { View, Pressable, ActivityIndicator } from "react-native";
-import { Text } from "@/components/ui/text";
+import { useState } from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+//import { Text } from "@/components/ui/text";
+import type { AvailableServiceDto, ComponentDto } from "../../data-entry.types";
 import { useDataEntryContext } from "../../DataEntryContext";
 import { useAvailableServices } from "../../hooks/queries";
 import { PartPickerModal } from "./PartPickerModal";
-import type {
-  AvailableServiceDto,
-  ComponentDto,
-} from "../../data-entry.types";
 
 export function ServiceList() {
   const { draft, dispatch } = useDataEntryContext();
 
   const vehicleTypeId = draft.vehicle.vehicleTypeId;
 
-  const {
-    data: services = [],
-    isLoading,
-  } = useAvailableServices(vehicleTypeId ?? undefined);
+  const { data: services = [], isLoading } = useAvailableServices(
+    vehicleTypeId ?? undefined,
+  );
 
   // State to manage active PartPickerModal
   const [activePicker, setActivePicker] = useState<{
@@ -32,18 +28,18 @@ export function ServiceList() {
 
   const selectedCount = Object.keys(draft.services).length;
 
-  if (!vehicleTypeId) {
-    return (
-      <View className="rounded-xl border border-border bg-card p-5 items-center gap-2">
-        <Text className="text-base font-bold text-muted-foreground">
-          6. Services Checklist
-        </Text>
-        <Text className="text-xs text-center text-muted-foreground">
-          Please select a vehicle category and type above to see services.
-        </Text>
-      </View>
-    );
-  }
+  // if (!vehicleTypeId) {
+  //   return (
+  //     <View className="rounded-xl border border-border bg-card p-5 items-center gap-2">
+  //       <Text className="text-base font-bold text-muted-foreground">
+  //         6. Services Checklist
+  //       </Text>
+  //       <Text className="text-xs text-center text-muted-foreground">
+  //         Please select a vehicle category and type above to see services.
+  //       </Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View className="rounded-xl border border-border bg-card p-4 gap-4 shadow-sm">

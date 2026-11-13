@@ -1,7 +1,6 @@
 // features/data-entry/components/sections/ServicePackageSection.tsx
 import React from "react";
-import { View, ActivityIndicator } from "react-native";
-import { Text } from "@/components/ui/text";
+import { View, Text, ActivityIndicator, useColorScheme } from "react-native";
 import { ToggleButton } from "@/components/ui/toggle-button";
 import { useDataEntryContext } from "../../DataEntryContext";
 import { useServicePackages } from "../../hooks/queries";
@@ -9,6 +8,14 @@ import { useServicePackages } from "../../hooks/queries";
 export function ServicePackageSection() {
   const { draft, dispatch } = useDataEntryContext();
   const vehicleTypeId = draft.vehicle.vehicleTypeId ?? undefined;
+  const isDark = useColorScheme() === "dark";
+
+  const colors = {
+    border: isDark ? "hsl(240, 3.7%, 15.9%)" : "hsl(240, 5.9%, 90%)",
+    card: isDark ? "hsl(240, 10%, 3.9%)" : "hsl(0, 0%, 100%)",
+    foreground: isDark ? "hsl(0, 0%, 98%)" : "hsl(240, 10%, 3.9%)",
+    mutedForeground: isDark ? "hsl(240, 5%, 64.9%)" : "hsl(240, 3.8%, 46.1%)",
+  };
 
   const { data: packages = [], isLoading } = useServicePackages(vehicleTypeId);
 
@@ -18,11 +25,33 @@ export function ServicePackageSection() {
 
   if (!vehicleTypeId) {
     return (
-      <View className="rounded-xl border border-border bg-card p-5 items-center gap-2">
-        <Text className="text-base font-bold text-muted-foreground">
+      <View
+        style={{
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.card,
+          padding: 20,
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "700",
+            color: colors.mutedForeground,
+          }}
+        >
           5. Service Package
         </Text>
-        <Text className="text-xs text-center text-muted-foreground">
+        <Text
+          style={{
+            fontSize: 12,
+            textAlign: "center",
+            color: colors.mutedForeground,
+          }}
+        >
           Please select a vehicle category and type above to see available service packages.
         </Text>
       </View>
@@ -30,19 +59,59 @@ export function ServicePackageSection() {
   }
 
   return (
-    <View className="rounded-xl border border-border bg-card p-4 gap-3 shadow-sm">
-      <View className="flex-row items-center justify-between">
-        <Text className="text-base font-bold text-foreground">
+    <View
+      style={{
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.card,
+        padding: 16,
+        gap: 12,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "700",
+            color: colors.foreground,
+          }}
+        >
           5. Service Package
         </Text>
-        {isLoading && <ActivityIndicator size="small" className="h-4 w-4" />}
+        {isLoading && (
+          <ActivityIndicator size="small" style={{ height: 16, width: 16 }} />
+        )}
       </View>
 
-      <Text className="text-xs text-muted-foreground">
+      <Text
+        style={{
+          fontSize: 12,
+          color: colors.mutedForeground,
+        }}
+      >
         Select the primary service package for this vehicle:
       </Text>
 
-      <View className="flex-row flex-wrap gap-2 pt-1">
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: 8,
+          paddingTop: 4,
+        }}
+      >
         {packages.map((pkg) => (
           <ToggleButton
             key={pkg.id}
