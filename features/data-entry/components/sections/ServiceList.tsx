@@ -6,21 +6,24 @@ import { useDataEntryContext } from "../../DataEntryContext";
 import { useProducts } from "../../hooks/queries";
 import { ProductQuantityModal } from "./ProductQuantityModal";
 
+type SelectedBrandEntry = {
+  brandId: number;
+  measurementOptionId: number;
+  unit: string;
+  quantity: number;
+};
+
 const ProductCard = React.memo(function ProductCard({
   product,
-  selectedProduct,
+  selectedBrands,
   onPressBrand,
 }: {
   product: ProductDto;
-  selectedProduct?: {
-    brandId: number;
-    measurementOptionId: number;
-    unit: string;
-    quantity: number;
-  };
+  selectedBrands?: Record<number, SelectedBrandEntry>;
   onPressBrand: (product: ProductDto, brand: ProductBrandDto) => void;
 }) {
-  const isProductSelected = Boolean(selectedProduct);
+  const selectedCount = Object.keys(selectedBrands ?? {}).length;
+  const isProductSelected = selectedCount > 0;
 
   return (
     <View
@@ -32,16 +35,17 @@ const ProductCard = React.memo(function ProductCard({
     >
       <View className="flex-row items-center justify-between">
         <Text className="text-sm font-bold text-foreground">{product.name}</Text>
-        {selectedProduct && (
+        {isProductSelected && (
           <Text className="text-xs font-semibold text-primary">
-            {selectedProduct.quantity} {selectedProduct.unit}
+            {selectedCount} selected
           </Text>
         )}
       </View>
 
       <View className="flex-row flex-wrap gap-2">
         {product.brands.map((brand) => {
-          const isBrandSelected = selectedProduct?.brandId === brand.id;
+          const selectedBrand = selectedBrands?.[brand.id];
+          const isBrandSelected = Boolean(selectedBrand);
           const unitLabel = brand.measurementOptions
             .map((m) => m.unit)
             .join(", ");
@@ -64,8 +68,8 @@ const ProductCard = React.memo(function ProductCard({
                 }`}
               >
                 {brand.name}
-                {isBrandSelected && selectedProduct
-                  ? ` • ${selectedProduct.quantity} ${selectedProduct.unit}`
+                {selectedBrand
+                  ? ` • ${selectedBrand.quantity} ${selectedBrand.unit}`
                   : unitLabel
                     ? ` (${unitLabel})`
                     : ""}
@@ -108,13 +112,20 @@ export function ServiceList() {
   );
 
   const handleRemoveProduct = useCallback(
-    (productId: number) => {
-      dispatch({ type: "PRODUCT_REMOVED", productId });
+    (productId: number, brandId: number) => {
+      dispatch({ type: "PRODUCT_REMOVED", productId, brandId });
     },
     [dispatch],
   );
 
-  const selectedProductCount = Object.keys(draft.products).length;
+  const selectedProductCount = Object.values(draft.products).reduce(
+    (sum, brands) => sum + Object.keys(brands).length,
+    0,
+  );
+
+  const activeSelection = qtyModalTarget
+    ? draft.products[qtyModalTarget.product.id]?.[qtyModalTarget.brand.id]
+    : undefined;
 
   return (
     <View className="rounded-xl border border-border bg-card p-4 gap-4 shadow-sm">
@@ -140,7 +151,7 @@ export function ServiceList() {
           <ProductCard
             key={product.id}
             product={product}
-            selectedProduct={draft.products[product.id]}
+            selectedBrands={draft.products[product.id]}
             onPressBrand={handlePressBrand}
           />
         ))}
@@ -151,20 +162,8 @@ export function ServiceList() {
         visible={Boolean(qtyModalTarget)}
         product={qtyModalTarget?.product ?? null}
         brand={qtyModalTarget?.brand ?? null}
-        initialQuantity={
-          qtyModalTarget &&
-          draft.products[qtyModalTarget.product.id]?.brandId ===
-            qtyModalTarget.brand.id
-            ? draft.products[qtyModalTarget.product.id]?.quantity
-            : undefined
-        }
-        initialMeasurementOptionId={
-          qtyModalTarget &&
-          draft.products[qtyModalTarget.product.id]?.brandId ===
-            qtyModalTarget.brand.id
-            ? draft.products[qtyModalTarget.product.id]?.measurementOptionId
-            : undefined
-        }
+        initialQuantity={activeSelection?.quantity}
+        initialMeasurementOptionId={activeSelection?.measurementOptionId}
         onClose={() => setQtyModalTarget(null)}
         onConfirm={handleConfirmProductQty}
         onRemove={handleRemoveProduct}

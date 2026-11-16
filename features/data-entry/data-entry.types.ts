@@ -190,12 +190,15 @@ export type ServiceJobDraft = {
   >;
   products: Record<
     number, // productId
-    {
-      brandId: number;
-      measurementOptionId: number;
-      unit: string;
-      quantity: number;
-    }
+    Record<
+      number, // brandId
+      {
+        brandId: number;
+        measurementOptionId: number;
+        unit: string;
+        quantity: number;
+      }
+    >
   >;
   totalCost: string; // The price displayed & edited by staff
   isPriceEdited: boolean; // true if staff manually changed the price

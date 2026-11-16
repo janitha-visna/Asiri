@@ -30,7 +30,7 @@ type ProductQuantityModalProps = {
     unit: string;
     quantity: number;
   }) => void;
-  onRemove?: (productId: number) => void;
+  onRemove?: (productId: number, brandId: number) => void;
 };
 
 export function ProductQuantityModal({
@@ -178,7 +178,7 @@ export function ProductQuantityModal({
                 variant="destructive"
                 size="sm"
                 onPress={() => {
-                  onRemove(product.id);
+                  onRemove(product.id, brand.id);
                   onClose();
                 }}
                 className="mr-auto"

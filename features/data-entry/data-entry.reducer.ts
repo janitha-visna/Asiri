@@ -58,7 +58,7 @@ export type DraftAction =
       unit: string;
       quantity: number;
     }
-  | { type: "PRODUCT_REMOVED"; productId: number }
+  | { type: "PRODUCT_REMOVED"; productId: number; brandId: number }
   | {
       type: "PART_SELECTED";
       serviceId: string;
@@ -259,23 +259,37 @@ export function draftReducer(
     }
 
     case "PRODUCT_SELECTED": {
+      const existingProductBrands = state.products[action.productId] ?? {};
       return {
         ...state,
         products: {
           ...state.products,
           [action.productId]: {
-            brandId: action.brandId,
-            measurementOptionId: action.measurementOptionId,
-            unit: action.unit,
-            quantity: action.quantity,
+            ...existingProductBrands,
+            [action.brandId]: {
+              brandId: action.brandId,
+              measurementOptionId: action.measurementOptionId,
+              unit: action.unit,
+              quantity: action.quantity,
+            },
           },
         },
       };
     }
 
     case "PRODUCT_REMOVED": {
+      const existingProductBrands = state.products[action.productId];
+      if (!existingProductBrands) return state;
+
+      const updatedBrands = { ...existingProductBrands };
+      delete updatedBrands[action.brandId];
+
       const products = { ...state.products };
-      delete products[action.productId];
+      if (Object.keys(updatedBrands).length === 0) {
+        delete products[action.productId];
+      } else {
+        products[action.productId] = updatedBrands;
+      }
       return { ...state, products };
     }
 
