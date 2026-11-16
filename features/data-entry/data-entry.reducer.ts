@@ -29,6 +29,7 @@ export const createInitialDraft = (): ServiceJobDraft => ({
   nextMeterReading: "",
   servicePackageId: null,
   services: {},
+  products: {},
   totalCost: "",
   isPriceEdited: false,
 });
@@ -49,6 +50,15 @@ export type DraftAction =
   | { type: "NEXT_METER_READING_CHANGED"; value: string }
   | { type: "PACKAGE_SELECTED"; packageId: string }
   | { type: "SERVICE_TOGGLED"; serviceId: string }
+  | {
+      type: "PRODUCT_SELECTED";
+      productId: number;
+      brandId: number;
+      measurementOptionId: number;
+      unit: string;
+      quantity: number;
+    }
+  | { type: "PRODUCT_REMOVED"; productId: number }
   | {
       type: "PART_SELECTED";
       serviceId: string;
@@ -246,6 +256,27 @@ export function draftReducer(
         services[action.serviceId] = { partIdsByComponent: {} };
       }
       return { ...state, services };
+    }
+
+    case "PRODUCT_SELECTED": {
+      return {
+        ...state,
+        products: {
+          ...state.products,
+          [action.productId]: {
+            brandId: action.brandId,
+            measurementOptionId: action.measurementOptionId,
+            unit: action.unit,
+            quantity: action.quantity,
+          },
+        },
+      };
+    }
+
+    case "PRODUCT_REMOVED": {
+      const products = { ...state.products };
+      delete products[action.productId];
+      return { ...state, products };
     }
 
     case "PART_SELECTED": {

@@ -20,6 +20,7 @@ export const dataEntryKeys = {
     [...dataEntryKeys.all, "available-services", typeId] as const,
   compatibleParts: (typeId: string, componentId: string) =>
     [...dataEntryKeys.all, "compatible-parts", typeId, componentId] as const,
+  products: () => [...dataEntryKeys.all, "products"] as const,
 };
 
 /**
@@ -151,4 +152,12 @@ export function useCreateServiceJobMutation() {
   });
 
   return mutationResult;
+}
+
+export function useProducts() {
+  return useQuery({
+    queryKey: dataEntryKeys.products(),
+    queryFn: ({ signal }) => api.getProduct(signal),
+    staleTime: 1000 * 60 * 10,
+  });
 }

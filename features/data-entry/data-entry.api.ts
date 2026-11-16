@@ -10,12 +10,12 @@ const USE_MOCKS = process.env.EXPO_PUBLIC_USE_MOCKS === "true";
  */
 export async function lookupVehicles(
   plate: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<T.VehicleLookupResponse> {
   if (USE_MOCKS) return mocks.lookupVehicles(plate);
   return apiRequest<T.VehicleLookupResponse>(
     `/vehicles/lookup?plate=${encodeURIComponent(plate)}`,
-    { signal }
+    { signal },
   );
 }
 
@@ -31,11 +31,11 @@ export async function getVehicleCategories(): Promise<T.VehicleCategoryDto[]> {
  * 3. Vehicle Types for a Category
  */
 export async function getVehicleTypes(
-  categoryId: string
+  categoryId: string,
 ): Promise<T.VehicleTypeDto[]> {
   if (USE_MOCKS) return mocks.getVehicleTypes(categoryId);
   return apiRequest<T.VehicleTypeDto[]>(
-    `/vehicle-categories/${categoryId}/vehicle-types`
+    `/vehicle-categories/${categoryId}/vehicle-types`,
   );
 }
 
@@ -53,12 +53,12 @@ export async function getServicePackages(): Promise<T.ServicePackageDto[]> {
 export async function getAvailableServices(
   typeId: string,
   packageId?: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<T.AvailableServiceDto[]> {
   if (USE_MOCKS) return mocks.getAvailableServices(typeId, packageId);
   return apiRequest<T.AvailableServiceDto[]>(
     `/vehicle-types/${typeId}/services`,
-    { signal }
+    { signal },
   );
 }
 
@@ -67,12 +67,21 @@ export async function getAvailableServices(
  */
 export async function getCompatibleParts(
   typeId: string,
-  componentId: string
+  componentId: string,
 ): Promise<T.PartDto[]> {
   if (USE_MOCKS) return mocks.getCompatibleParts(typeId, componentId);
   return apiRequest<T.PartDto[]>(
-    `/vehicle-types/${typeId}/components/${componentId}/parts`
+    `/vehicle-types/${typeId}/components/${componentId}/parts`,
   );
+}
+
+/**
+ * 6b. Products & Brands Catalog
+ */
+export async function getProducts(
+  signal?: AbortSignal
+): Promise<T.ProductDto[]> {
+  return apiRequest<T.ProductDto[]>("/products", { signal });
 }
 
 /**
@@ -80,7 +89,7 @@ export async function getCompatibleParts(
  */
 export async function addCustomerPhone(
   customerId: string,
-  phoneNumber: string
+  phoneNumber: string,
 ): Promise<T.PhoneDto> {
   if (USE_MOCKS) {
     return { id: `ph-${Date.now()}`, phoneNumber, isPrimary: false };
@@ -93,7 +102,7 @@ export async function addCustomerPhone(
 
 export async function deleteCustomerPhone(
   customerId: string,
-  phoneId: string
+  phoneId: string,
 ): Promise<void> {
   if (USE_MOCKS) return;
   return apiRequest<void>(`/customers/${customerId}/phones/${phoneId}`, {
@@ -103,7 +112,7 @@ export async function deleteCustomerPhone(
 
 export async function setPrimaryCustomerPhone(
   customerId: string,
-  phoneId: string
+  phoneId: string,
 ): Promise<T.PhoneDto> {
   if (USE_MOCKS) {
     return { id: phoneId, phoneNumber: "", isPrimary: true };
@@ -118,11 +127,17 @@ export async function setPrimaryCustomerPhone(
  * 8. Save Service Job (All-in-one transactional creation)
  */
 export async function createServiceJob(
-  payload: T.CreateServiceJobPayload
+  payload: T.CreateServiceJobPayload,
 ): Promise<T.ServiceJobResponse> {
   if (USE_MOCKS) return mocks.createServiceJob(payload);
   return apiRequest<T.ServiceJobResponse>("/service-jobs", {
     method: "POST",
     body: payload,
   });
+}
+
+export async function getProduct(
+  signal?: AbortSignal,
+): Promise<T.ProductDto[]> {
+  return apiRequest<T.ProductDto[]>("/products", { signal });
 }

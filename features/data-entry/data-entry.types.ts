@@ -188,6 +188,34 @@ export type ServiceJobDraft = {
       partIdsByComponent: Record<Id, Id>; // componentId -> partId
     }
   >;
+  products: Record<
+    number, // productId
+    {
+      brandId: number;
+      measurementOptionId: number;
+      unit: string;
+      quantity: number;
+    }
+  >;
   totalCost: string; // The price displayed & edited by staff
   isPriceEdited: boolean; // true if staff manually changed the price
+};
+
+export type MeasurementOptionDto = {
+  id: number;
+  type: "PIECE" | "CAN" | "LOOSE";
+  unit: "Can" | "Litres" | "Pieces";
+  allowDecimal: boolean;
+};
+
+export type ProductBrandDto = {
+  id: number;
+  name: "string";
+  measurementOptions: MeasurementOptionDto[];
+};
+
+export type ProductDto = {
+  id: number;
+  name: string;
+  brands: ProductBrandDto[];
 };
