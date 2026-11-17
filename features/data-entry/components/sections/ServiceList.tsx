@@ -118,6 +118,10 @@ export function ServiceList() {
     [dispatch],
   );
 
+  const handleResetProducts = useCallback(() => {
+    dispatch({ type: "PRODUCTS_RESET" });
+  }, [dispatch]);
+
   const selectedProductCount = Object.values(draft.products).reduce(
     (sum, brands) => sum + Object.keys(brands).length,
     0,
@@ -134,6 +138,16 @@ export function ServiceList() {
           6. Products & Parts
         </Text>
         <View className="flex-row items-center gap-2">
+          {selectedProductCount > 0 && (
+            <Pressable
+              onPress={handleResetProducts}
+              className="rounded-full border border-destructive/40 bg-destructive/10 px-2.5 py-0.5"
+            >
+              <Text className="text-xs font-semibold text-destructive">
+                Reset
+              </Text>
+            </Pressable>
+          )}
           {isProductsLoading ? (
             <ActivityIndicator size="small" />
           ) : (
