@@ -16,8 +16,8 @@ export function ServicePackageSection() {
     console.log("Service packages:", JSON.stringify(packages, null, 2));
   }, [packages]);
 
-  const handleSelectPackage = (packageId: string) => {
-    dispatch({ type: "PACKAGE_SELECTED", packageId });
+  const handleSelectPackage = (packageId: string, price?: number | null) => {
+    dispatch({ type: "PACKAGE_SELECTED", packageId, price });
   };
 
   if (!vehicleTypeId) {
@@ -57,7 +57,7 @@ export function ServicePackageSection() {
                 : pkg.name
             }
             selected={draft.servicePackageId === pkg.id}
-            onPress={() => handleSelectPackage(pkg.id)}
+            onPress={() => handleSelectPackage(pkg.id, pkg.price)}
           />
         ))}
       </View>

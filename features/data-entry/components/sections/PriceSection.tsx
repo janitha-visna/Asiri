@@ -15,7 +15,7 @@ export function PriceSection() {
     draft.vehicle.vehicleTypeId ?? undefined
   );
 
-  const estimatedCost = estimateCost(draft, services);
+  const estimatedCost = draft.estimatedCost ?? estimateCost(draft, services);
 
   const handlePriceChange = (value: string) => {
     dispatch({ type: "PRICE_EDITED", value });

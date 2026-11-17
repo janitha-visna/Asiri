@@ -31,6 +31,7 @@ export const createInitialDraft = (): ServiceJobDraft => ({
   services: {},
   products: {},
   totalCost: "",
+  estimatedCost: null,
   isPriceEdited: false,
 });
 
@@ -48,7 +49,7 @@ export type DraftAction =
   | { type: "DATE_CHANGED"; date: string }
   | { type: "METER_READING_CHANGED"; value: string }
   | { type: "NEXT_METER_READING_CHANGED"; value: string }
-  | { type: "PACKAGE_SELECTED"; packageId: string }
+  | { type: "PACKAGE_SELECTED"; packageId: string; price?: number | null }
   | { type: "SERVICE_TOGGLED"; serviceId: string }
   | {
       type: "PRODUCT_SELECTED";
@@ -247,6 +248,7 @@ export function draftReducer(
       return {
         ...state,
         servicePackageId: action.packageId,
+        estimatedCost: action.price ?? null,
       };
 
     case "SERVICE_TOGGLED": {

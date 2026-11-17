@@ -201,6 +201,7 @@ export type ServiceJobDraft = {
     >
   >;
   totalCost: string; // The price displayed & edited by staff
+  estimatedCost: number | null; // Estimated cost from selected service package
   isPriceEdited: boolean; // true if staff manually changed the price
 };
 
