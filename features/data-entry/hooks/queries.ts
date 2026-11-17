@@ -97,7 +97,7 @@ export function useServicePackages(vehicleTypeId?: string) {
       return matrix.services.map((s) => ({
         id: s.id,
         name: s.name,
-        price: matrix.prices[`${s.id}_${vehicleTypeId}`],
+        price: matrix.prices[`${s.id}_${vehicleTypeId}`] ?? undefined,
         isActive: true,
       }));
     },

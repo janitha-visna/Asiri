@@ -1,23 +1,20 @@
 // features/data-entry/components/sections/ServicePackageSection.tsx
-import React from "react";
-import { View, Text, ActivityIndicator, useColorScheme } from "react-native";
+import { Text } from "@/components/ui/text";
 import { ToggleButton } from "@/components/ui/toggle-button";
+import { useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
 import { useDataEntryContext } from "../../DataEntryContext";
 import { useServicePackages } from "../../hooks/queries";
 
 export function ServicePackageSection() {
   const { draft, dispatch } = useDataEntryContext();
   const vehicleTypeId = draft.vehicle.vehicleTypeId ?? undefined;
-  const isDark = useColorScheme() === "dark";
-
-  const colors = {
-    border: isDark ? "hsl(240, 3.7%, 15.9%)" : "hsl(240, 5.9%, 90%)",
-    card: isDark ? "hsl(240, 10%, 3.9%)" : "hsl(0, 0%, 100%)",
-    foreground: isDark ? "hsl(0, 0%, 98%)" : "hsl(240, 10%, 3.9%)",
-    mutedForeground: isDark ? "hsl(240, 5%, 64.9%)" : "hsl(240, 3.8%, 46.1%)",
-  };
 
   const { data: packages = [], isLoading } = useServicePackages(vehicleTypeId);
+
+  useEffect(() => {
+    console.log("Service packages:", JSON.stringify(packages, null, 2));
+  }, [packages]);
 
   const handleSelectPackage = (packageId: string) => {
     dispatch({ type: "PACKAGE_SELECTED", packageId });
@@ -25,93 +22,32 @@ export function ServicePackageSection() {
 
   if (!vehicleTypeId) {
     return (
-      <View
-        style={{
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: colors.border,
-          backgroundColor: colors.card,
-          padding: 20,
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: "700",
-            color: colors.mutedForeground,
-          }}
-        >
+      <View className="rounded-xl border border-border bg-card p-5 items-center gap-2 shadow-sm">
+        <Text className="text-base font-bold text-muted-foreground">
           5. Service Package
         </Text>
-        <Text
-          style={{
-            fontSize: 12,
-            textAlign: "center",
-            color: colors.mutedForeground,
-          }}
-        >
-          Please select a vehicle category and type above to see available service packages.
+        <Text className="text-xs text-center text-muted-foreground">
+          Please select a vehicle category and type above to see available
+          service packages.
         </Text>
       </View>
     );
   }
 
   return (
-    <View
-      style={{
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.card,
-        padding: 16,
-        gap: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 1,
-      }}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: "700",
-            color: colors.foreground,
-          }}
-        >
+    <View className="rounded-xl border border-border bg-card p-4 gap-3 shadow-sm">
+      <View className="flex-row items-center justify-between">
+        <Text className="text-base font-bold text-foreground">
           5. Service Package
         </Text>
-        {isLoading && (
-          <ActivityIndicator size="small" style={{ height: 16, width: 16 }} />
-        )}
+        {isLoading && <ActivityIndicator size="small" className="h-4 w-4" />}
       </View>
 
-      <Text
-        style={{
-          fontSize: 12,
-          color: colors.mutedForeground,
-        }}
-      >
+      <Text className="text-xs text-muted-foreground">
         Select the primary service package for this vehicle:
       </Text>
 
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          gap: 8,
-          paddingTop: 4,
-        }}
-      >
+      <View className="flex-row flex-wrap gap-2 pt-1">
         {packages.map((pkg) => (
           <ToggleButton
             key={pkg.id}
