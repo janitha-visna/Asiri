@@ -28,7 +28,7 @@ export function SaveBar() {
   const errorKeys = Object.keys(errors);
   const isValid = errorKeys.length === 0;
 
-  const estimatedCost = estimateCost(draft, services);
+  const estimatedCost = draft.estimatedCost ?? estimateCost(draft, services);
   const displayPrice = draft.isPriceEdited && draft.totalCost
     ? `Rs. ${Number(draft.totalCost).toLocaleString()}`
     : estimatedCost !== null

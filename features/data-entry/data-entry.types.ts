@@ -132,10 +132,13 @@ export type CreateServiceJobPayload = {
   meterReading?: number; // Current odometer reading
   nextMeterReading?: number; // 👈 Added: Next service meter reading due
   servicePackageId: Id;
-  services: {
-    serviceId: Id;
-    partIds: Id[];
+  products: {
+    productId: number;
+    brandId: number;
+    measurementOptionId: number;
+    quantity: number;
   }[];
+  estimatedCost?: number | null;
   totalCost?: number;
 };
 

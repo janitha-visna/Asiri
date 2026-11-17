@@ -104,14 +104,6 @@ export function validateDraft(
     errors.package = "Select a service package";
   }
 
-  if (Object.keys(draft.services).length === 0) {
-    errors.services = "Select at least one service";
-  }
-
-  if (hasMissingPartSelections(draft, services)) {
-    errors.parts = "Choose a brand for all required service parts";
-  }
-
   if (
     draft.isPriceEdited &&
     (isNaN(Number(draft.totalCost)) || Number(draft.totalCost) < 0)
@@ -147,10 +139,16 @@ export function buildCreatePayload(
       ? Number(draft.nextMeterReading)
       : undefined,
     servicePackageId: draft.servicePackageId!,
-    services: Object.entries(draft.services).map(([serviceId, s]) => ({
-      serviceId,
-      partIds: Object.values(s.partIdsByComponent),
-    })),
+    products: Object.entries(draft.products).flatMap(
+      ([productId, brandsMap]) =>
+        Object.values(brandsMap).map((item) => ({
+          productId: Number(productId),
+          brandId: item.brandId,
+          measurementOptionId: item.measurementOptionId,
+          quantity: item.quantity,
+        }))
+    ),
+    estimatedCost: draft.estimatedCost,
     totalCost: draft.isPriceEdited ? Number(draft.totalCost) : undefined,
   };
 }
