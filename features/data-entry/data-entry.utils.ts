@@ -130,8 +130,11 @@ export function buildCreatePayload(
       id: draft.customer.id,
       name: draft.customer.name.trim(),
       phones: draft.customer.phones
-        .map((p) => normalizePhone(p.number))
-        .filter(Boolean),
+        .map((p) => ({
+          number: normalizePhone(p.number),
+          isPrimary: p.isPrimary,
+        }))
+        .filter((p) => Boolean(p.number)),
     },
     jobDate: draft.jobDate,
     meterReading: draft.meterReading ? Number(draft.meterReading) : undefined,

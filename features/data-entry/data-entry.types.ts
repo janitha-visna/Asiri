@@ -126,7 +126,10 @@ export type CreateServiceJobPayload = {
   customer: {
     id: Id | null;
     name: string;
-    phones: string[];
+    phones: {
+      number: string;
+      isPrimary: boolean;
+    }[];
   };
   jobDate: string;
   meterReading?: number; // Current odometer reading
