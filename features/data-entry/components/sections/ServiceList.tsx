@@ -1,7 +1,11 @@
 // features/data-entry/components/sections/ServiceList.tsx
 import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
-import type { ProductBrandDto, ProductDto } from "../../data-entry.types";
+import type {
+  ProductBrandDto,
+  ProductDto,
+  SupplySource,
+} from "../../data-entry.types";
 import { useDataEntryContext } from "../../DataEntryContext";
 import { useProducts } from "../../hooks/queries";
 import { ProductQuantityModal } from "./ProductQuantityModal";
@@ -11,6 +15,7 @@ type SelectedBrandEntry = {
   measurementOptionId: number;
   unit: string;
   quantity: number;
+  supplySource: SupplySource;
 };
 
 const ProductCard = React.memo(function ProductCard({
@@ -69,7 +74,11 @@ const ProductCard = React.memo(function ProductCard({
               >
                 {brand.name}
                 {selectedBrand
-                  ? ` • ${selectedBrand.quantity} ${selectedBrand.unit}`
+                  ? ` • ${selectedBrand.quantity} ${selectedBrand.unit}${
+                      selectedBrand.supplySource === "CUSTOMER_SUPPLIED"
+                        ? " (Customer)"
+                        : ""
+                    }`
                   : unitLabel
                     ? ` (${unitLabel})`
                     : ""}
@@ -105,6 +114,7 @@ export function ServiceList() {
       measurementOptionId: number;
       unit: string;
       quantity: number;
+      supplySource: SupplySource;
     }) => {
       dispatch({ type: "PRODUCT_SELECTED", ...payload });
     },
@@ -178,6 +188,7 @@ export function ServiceList() {
         brand={qtyModalTarget?.brand ?? null}
         initialQuantity={activeSelection?.quantity}
         initialMeasurementOptionId={activeSelection?.measurementOptionId}
+        initialSupplySource={activeSelection?.supplySource}
         onClose={() => setQtyModalTarget(null)}
         onConfirm={handleConfirmProductQty}
         onRemove={handleRemoveProduct}

@@ -2,6 +2,7 @@
 import type {
   DraftPhone,
   ServiceJobDraft,
+  SupplySource,
   VehicleDto,
 } from "./data-entry.types";
 import { newKey, normalizePlate, todayString } from "./data-entry.utils";
@@ -58,6 +59,7 @@ export type DraftAction =
       measurementOptionId: number;
       unit: string;
       quantity: number;
+      supplySource: SupplySource;
     }
   | { type: "PRODUCT_REMOVED"; productId: number; brandId: number }
   | { type: "PRODUCTS_RESET" }
@@ -274,6 +276,7 @@ export function draftReducer(
               measurementOptionId: action.measurementOptionId,
               unit: action.unit,
               quantity: action.quantity,
+              supplySource: action.supplySource,
             },
           },
         },

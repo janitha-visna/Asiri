@@ -117,6 +117,8 @@ export type PartDto = {
   name: string;
 };
 
+export type SupplySource = "SHOP_SUPPLIED" | "CUSTOMER_SUPPLIED";
+
 export type CreateServiceJobPayload = {
   vehicle: {
     id: Id | null;
@@ -140,6 +142,7 @@ export type CreateServiceJobPayload = {
     brandId: number;
     measurementOptionId: number;
     quantity: number;
+    supplySource: SupplySource;
   }[];
   estimatedCost?: number | null;
   totalCost?: number;
@@ -203,6 +206,7 @@ export type ServiceJobDraft = {
         measurementOptionId: number;
         unit: string;
         quantity: number;
+        supplySource: SupplySource;
       }
     >
   >;

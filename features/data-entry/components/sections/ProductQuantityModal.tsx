@@ -14,6 +14,7 @@ import type {
   MeasurementOptionDto,
   ProductBrandDto,
   ProductDto,
+  SupplySource,
 } from "../../data-entry.types";
 
 type ProductQuantityModalProps = {
@@ -22,6 +23,7 @@ type ProductQuantityModalProps = {
   brand: ProductBrandDto | null;
   initialQuantity?: number;
   initialMeasurementOptionId?: number;
+  initialSupplySource?: SupplySource;
   onClose: () => void;
   onConfirm: (payload: {
     productId: number;
@@ -29,6 +31,7 @@ type ProductQuantityModalProps = {
     measurementOptionId: number;
     unit: string;
     quantity: number;
+    supplySource: SupplySource;
   }) => void;
   onRemove?: (productId: number, brandId: number) => void;
 };
@@ -39,6 +42,7 @@ export function ProductQuantityModal({
   brand,
   initialQuantity,
   initialMeasurementOptionId,
+  initialSupplySource,
   onClose,
   onConfirm,
   onRemove,
@@ -46,6 +50,8 @@ export function ProductQuantityModal({
   const options = brand?.measurementOptions ?? [];
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [qtyInput, setQtyInput] = useState("");
+  const [supplySource, setSupplySource] =
+    useState<SupplySource>("SHOP_SUPPLIED");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -55,9 +61,16 @@ export function ProductQuantityModal({
         opts.find((o) => o.id === initialMeasurementOptionId) ?? opts[0];
       setSelectedOptionId(defaultOpt?.id ?? null);
       setQtyInput(initialQuantity ? String(initialQuantity) : "");
+      setSupplySource(initialSupplySource ?? "SHOP_SUPPLIED");
       setError(null);
     }
-  }, [visible, brand, initialQuantity, initialMeasurementOptionId]);
+  }, [
+    visible,
+    brand,
+    initialQuantity,
+    initialMeasurementOptionId,
+    initialSupplySource,
+  ]);
 
   if (!product || !brand) return null;
 
@@ -93,6 +106,7 @@ export function ProductQuantityModal({
       measurementOptionId: activeOption.id,
       unit: activeOption.unit,
       quantity: parsed,
+      supplySource,
     });
     onClose();
   };
@@ -170,6 +184,44 @@ export function ProductQuantityModal({
                 {error}
               </Text>
             )}
+          </View>
+
+          {/* Supply Source Selector */}
+          <View className="gap-1.5">
+            <Text className="text-xs font-medium text-muted-foreground">
+              Supply Source
+            </Text>
+            <View className="flex-row gap-2">
+              {(
+                [
+                  { value: "SHOP_SUPPLIED", label: "Shop Supplied" },
+                  { value: "CUSTOMER_SUPPLIED", label: "Customer Supplied" },
+                ] as const
+              ).map((option) => {
+                const isSelected = supplySource === option.value;
+                return (
+                  <Pressable
+                    key={option.value}
+                    onPress={() => setSupplySource(option.value)}
+                    className={`flex-1 rounded-md border px-3 py-2 items-center ${
+                      isSelected
+                        ? "border-primary bg-primary"
+                        : "border-border bg-background"
+                    }`}
+                  >
+                    <Text
+                      className={`text-xs font-semibold ${
+                        isSelected
+                          ? "text-primary-foreground"
+                          : "text-foreground"
+                      }`}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
 
           <View className="flex-row items-center justify-end gap-2 pt-1">

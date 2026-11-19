@@ -149,6 +149,7 @@ export function buildCreatePayload(
           brandId: item.brandId,
           measurementOptionId: item.measurementOptionId,
           quantity: item.quantity,
+          supplySource: item.supplySource,
         }))
     ),
     estimatedCost: draft.estimatedCost,
