@@ -1,25 +1,36 @@
+import { apiRequest } from "@/lib/api/client";
 import { MONTH_LABELS } from "./revenue-chart.constants";
 import type { MonthlyRevenuePoint } from "./revenue-chart.types";
 
+type MonthlyRevenueApiResponse = {
+  year: number;
+  totalRevenue: number;
+  months: {
+    month: number;
+    label: string;
+    revenue: number;
+  }[];
+};
+
 /**
- * Fetches monthly revenue totals for a given year.
- * Replace this mock with a real API call (e.g. fetch("/api/revenue?year=...")).
- * Must resolve to exactly 12 points (Jan-Dec); missing months should be null.
+ * Fetches monthly revenue totals for a given year from
+ * GET /service-jobs/revenue/monthly?year=...
+ * Resolves to exactly 12 points (Jan-Dec); missing months are null.
  */
 export async function fetchYearlyRevenue(
   year: number
 ): Promise<MonthlyRevenuePoint[]> {
-  await new Promise((resolve) => setTimeout(resolve, 900));
+  const res = await apiRequest<MonthlyRevenueApiResponse>(
+    `/service-jobs/revenue/monthly?year=${year}`
+  );
 
-  // Simulated failure for demo/testing of the error state.
-  if (Math.random() < 0.1) {
-    throw new Error("Failed to load revenue data");
-  }
+  const byMonth = new Map(res.months.map((m) => [m.month, m]));
 
-  return MONTH_LABELS.map((month, index) => {
-    const base = 200_000 + index * 15_000;
-    const variance = Math.round((Math.random() - 0.5) * 120_000);
-    const value = Math.max(0, base + variance);
-    return { month, value };
+  return MONTH_LABELS.map((fallbackLabel, index) => {
+    const entry = byMonth.get(index + 1);
+    return {
+      month: entry?.label ?? fallbackLabel,
+      value: entry?.revenue ?? null,
+    };
   });
 }
