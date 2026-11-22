@@ -7,7 +7,6 @@ import { BarChart } from "react-native-gifted-charts";
 import {
   CURRENT_MONTH_COLOR,
   PREVIOUS_MONTH_COLOR,
-  Y_AXIS_MAX,
   Y_AXIS_SECTIONS,
   formatCompact,
   formatCurrencyFull,
@@ -74,6 +73,21 @@ export function BillComparisonBarChart({
     ]);
   }, [response, axisTextColor]);
 
+  const yAxisMax = useMemo(() => {
+    const maxAvg = Math.max(
+      0,
+      ...response.data.flatMap((item) => [
+        item.previousMonthAverage,
+        item.currentMonthAverage,
+      ]),
+    );
+    const step = Math.max(
+      1_000,
+      Math.ceil(maxAvg / Y_AXIS_SECTIONS / 1_000) * 1_000,
+    );
+    return step * Y_AXIS_SECTIONS;
+  }, [response.data]);
+
   const groupWidth =
     BAR_WIDTH * 2 + SPACING_WITHIN_GROUP + SPACING_BETWEEN_GROUPS;
   const minChartWidth = SCREEN_WIDTH - 64;
@@ -117,10 +131,10 @@ export function BillComparisonBarChart({
           barBorderRadius={6}
           initialSpacing={16}
           endSpacing={16}
-          maxValue={Y_AXIS_MAX}
+          maxValue={yAxisMax}
           noOfSections={Y_AXIS_SECTIONS}
           yAxisLabelTexts={Array.from({ length: Y_AXIS_SECTIONS + 1 }, (_, i) =>
-            formatCompact((Y_AXIS_MAX / Y_AXIS_SECTIONS) * i),
+            formatCompact((yAxisMax / Y_AXIS_SECTIONS) * i),
           )}
           yAxisTextStyle={{ fontSize: 10, color: axisTextColor }}
           yAxisLabelWidth={44}

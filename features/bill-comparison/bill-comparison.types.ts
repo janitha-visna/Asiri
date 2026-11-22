@@ -1,4 +1,4 @@
-export type VehicleType = "Car" | "Bike" | "Lorry" | "Bus";
+export type VehicleType = string;
 
 export type VehicleBillAverage = {
   vehicleType: VehicleType;
