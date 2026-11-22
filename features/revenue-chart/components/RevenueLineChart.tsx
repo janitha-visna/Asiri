@@ -4,15 +4,14 @@ import { Dimensions, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LineChart } from "react-native-gifted-charts";
 import {
-  Y_AXIS_LABELS,
-  Y_AXIS_MAX,
-  Y_AXIS_SECTIONS,
+  formatCurrencyCompact,
   formatCurrencyFull,
 } from "../revenue-chart.constants";
 import type { MonthlyRevenuePoint } from "../revenue-chart.types";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const CHART_LINE_COLOR = "#16a34a";
+const CHART_LINE_COLOR = "#2563eb";
+const CHART_LINE_COLOR1 = "#2563eb";
 
 type ChartDataItem = { value: number; label: string };
 
@@ -41,14 +40,27 @@ export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
     [data],
   );
 
-  const POINT_SPACING = 56;
-  const INITIAL_SPACING = 16;
-  const END_SPACING = 40;
+  console.log("chartData:", chartData);
+
+  const Y_SECTIONS = 5;
+
+  const { yAxisMax, yAxisLabels } = useMemo(() => {
+    const maxRevenue = Math.max(0, ...data.map((point) => point.value ?? 0));
+    const step = Math.max(
+      50_000,
+      Math.ceil(maxRevenue / Y_SECTIONS / 50_000) * 50_000,
+    );
+    const labels: string[] = [];
+    for (let i = 0; i <= Y_SECTIONS; i++) {
+      labels.push(formatCurrencyCompact(i * step));
+    }
+    return { yAxisMax: step * Y_SECTIONS, yAxisLabels: labels };
+  }, [data]);
+
+  const POINT_SPACING = 50;
+  const INITIAL_SPACING = 10;
+  const END_SPACING = 20;
   const minChartWidth = SCREEN_WIDTH - 64;
-  const chartWidth = Math.max(
-    minChartWidth,
-    POINT_SPACING * (chartData.length - 1) + INITIAL_SPACING + END_SPACING,
-  );
 
   return (
     <ScrollView
@@ -58,54 +70,33 @@ export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
     >
       <LineChart
         data={chartData}
-        curved
+        showValuesAsDataPointsText={true}
         areaChart
-        disableScroll
-        width={chartWidth}
-        height={220}
+        disableScroll={false}
+        textShiftY={-8}
         initialSpacing={INITIAL_SPACING}
         endSpacing={END_SPACING}
         spacing={POINT_SPACING}
-        color={CHART_LINE_COLOR}
-        thickness={3}
-        startFillColor={CHART_LINE_COLOR}
-        endFillColor={CHART_LINE_COLOR}
-        startOpacity={0.35}
+        // color={CHART_LINE_COLOR}
+        // startFillColor={CHART_LINE_COLOR}
+        // endFillColor={CHART_LINE_COLOR1}
+        startOpacity={0.8}
         endOpacity={0.02}
-        maxValue={Y_AXIS_MAX}
-        noOfSections={Y_AXIS_SECTIONS}
-        yAxisLabelTexts={Y_AXIS_LABELS}
+        //maxValue={Y_AXIS_MAX}
+        //noOfSections={Y_AXIS_SECTIONS}
+        maxValue={yAxisMax}
+        noOfSections={Y_SECTIONS}
+        yAxisLabelTexts={yAxisLabels}
         yAxisTextStyle={{ fontSize: 10, color: "#71717a" }}
         yAxisLabelWidth={56}
         yAxisColor="transparent"
         xAxisColor="#e4e4e7"
         xAxisLabelTextStyle={{ fontSize: 10, color: "#71717a" }}
         rulesColor="#e4e4e7"
-        rulesType="dashed"
         dataPointsColor={CHART_LINE_COLOR}
-        dataPointsRadius={4}
-        isAnimated
+        dataPointsRadius={5}
+        isAnimated={true}
         animationDuration={700}
-        pointerConfig={{
-          pointerStripHeight: 180,
-          pointerStripColor: "#d4d4d8",
-          pointerStripWidth: 2,
-          pointerColor: CHART_LINE_COLOR,
-          radius: 6,
-          pointerLabelWidth: 120,
-          // Larger than the tooltip's real height on purpose — when
-          // autoAdjustPointerLabelPosition is true, this value (not
-          // shiftPointerLabelY) drives the "-pointerLabelHeight" vertical
-          // offset used to place the tooltip above the touch point.
-          pointerLabelHeight: 130,
-          activatePointersOnLongPress: false,
-          activatePointersInstantlyOnTouch: true,
-          autoAdjustPointerLabelPosition: true,
-          pointerVanishDelay: 150,
-          pointerLabelComponent: (items: ChartDataItem[]) => (
-            <PointerLabel items={items} />
-          ),
-        }}
       />
     </ScrollView>
   );
