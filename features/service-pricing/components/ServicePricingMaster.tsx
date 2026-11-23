@@ -168,9 +168,9 @@ export function ServicePricingMaster() {
                 <Pressable
                   key={cat.categoryId}
                   onPress={() => setSelectedCategoryId(cat.categoryId)}
-                  className={`flex-row items-center gap-1.5 px-3.5 py-2 rounded-full border ${
+                  className={`flex-row items-center gap-1.5 px-3.5 py-2 rounded-full border shadow-sm ${
                     isSelected
-                      ? "bg-primary border-primary shadow-sm"
+                      ? "bg-primary border-primary"
                       : "bg-card border-border"
                   }`}
                 >
