@@ -1,33 +1,53 @@
+import { apiRequest } from "@/lib/api/client";
 import type { AnalyticsResponse } from "./analytics.types";
 
+type RepeatByCategoryApiResponse = {
+  year: number;
+  categories: {
+    categoryId: number;
+    categoryName: string;
+    totalVehicles: number;
+    repeatVehicles: number;
+    nonRepeatVehicles: number;
+  }[];
+};
+
 /**
- * Fetches repeat vs non-repeat vehicle analytics per vehicle type.
- * Replace this mock with a real API call, e.g. fetch("/api/analytics/repeat-vehicles").
+ * Fetches repeat vs non-repeat vehicle analytics per vehicle category
+ * from GET /service-jobs/vehicles/repeat-by-category?year=...
  */
-export async function fetchAnalytics(): Promise<AnalyticsResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 900));
+export async function fetchAnalytics(
+  year: number = new Date().getFullYear()
+): Promise<AnalyticsResponse> {
+  const res = await apiRequest<RepeatByCategoryApiResponse>(
+    `/service-jobs/vehicles/repeat-by-category?year=${year}`
+  );
 
-  // Simulated failure for demo/testing of the error state.
-  if (Math.random() < 0.1) {
-    throw new Error("Failed to load analytics data");
-  }
+  const data = res.categories.map((c) => ({
+    vehicleType: c.categoryName,
+    repeatCount: c.repeatVehicles,
+    nonRepeatCount: c.nonRepeatVehicles,
+  }));
 
-  const data = [
-    { vehicleType: "Cars", repeatCount: 62, nonRepeatCount: 38 },
-    { vehicleType: "Vans", repeatCount: 34, nonRepeatCount: 22 },
-    { vehicleType: "SUV", repeatCount: 28, nonRepeatCount: 24 },
-    { vehicleType: "Motorcycle", repeatCount: 15, nonRepeatCount: 20 },
-  ];
-
-  const repeatVehicles = data.reduce((sum, item) => sum + item.repeatCount, 0);
-  const nonRepeatVehicles = data.reduce((sum, item) => sum + item.nonRepeatCount, 0);
-  const totalVehicles = repeatVehicles + nonRepeatVehicles;
+  const repeatVehicles = res.categories.reduce(
+    (sum, c) => sum + c.repeatVehicles,
+    0
+  );
+  const nonRepeatVehicles = res.categories.reduce(
+    (sum, c) => sum + c.nonRepeatVehicles,
+    0
+  );
+  const totalVehicles = res.categories.reduce(
+    (sum, c) => sum + c.totalVehicles,
+    0
+  );
 
   return {
     totalVehicles,
     repeatVehicles,
     nonRepeatVehicles,
-    repeatPercentage: totalVehicles > 0 ? (repeatVehicles / totalVehicles) * 100 : 0,
+    repeatPercentage:
+      totalVehicles > 0 ? (repeatVehicles / totalVehicles) * 100 : 0,
     data,
   };
 }
