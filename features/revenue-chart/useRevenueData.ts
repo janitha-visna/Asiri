@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchYearlyRevenue } from "./revenue-chart.api";
 import type {
   MonthlyRevenuePoint,
@@ -9,31 +9,38 @@ import type {
 export function useRevenueData(year: number): RevenueChartState {
   const [status, setStatus] = useState<RevenueChartStatus>("loading");
   const [data, setData] = useState<MonthlyRevenuePoint[]>([]);
-  const requestId = useRef(0);
+  const [reloadCount, setReloadCount] = useState(0);
 
-  const load = useCallback(() => {
-    const currentRequest = ++requestId.current;
-    setStatus("loading");
+  useEffect(() => {
+    let cancelled = false;
 
     fetchYearlyRevenue(year)
       .then((points) => {
-        if (requestId.current !== currentRequest) return;
+        if (cancelled) return;
         const hasAnyValue = points.some(
-          (point) => point.value !== null && point.value > 0
+          (point) => point.value !== null && point.value > 0,
         );
         setData(points);
         setStatus(hasAnyValue ? "success" : "empty");
       })
       .catch(() => {
-        if (requestId.current !== currentRequest) return;
+        if (cancelled) return;
         setData([]);
         setStatus("error");
       });
-  }, [year]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+    return () => {
+      cancelled = true;
+    };
+  }, [year, reloadCount]);
 
-  return { status, data, year, retry: load };
+  return {
+    status,
+    data,
+    year,
+    retry: () => {
+      setStatus("loading");
+      setReloadCount((c) => c + 1);
+    },
+  };
 }
