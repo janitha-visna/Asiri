@@ -1,7 +1,7 @@
 import { Text } from "@/components/ui/text";
 import { useColorScheme } from "nativewind";
 import { useMemo, useState } from "react";
-import { Dimensions, View } from "react-native";
+import {  View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { BarChart } from "react-native-gifted-charts";
 import {
@@ -16,9 +16,9 @@ import type {
   SelectedBar,
 } from "../bill-comparison.types";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const BAR_WIDTH = 20;
+
+
 const SPACING_WITHIN_GROUP = 4;
 const SPACING_BETWEEN_GROUPS = 28;
 
@@ -73,7 +73,7 @@ export function BillComparisonBarChart({
     ]);
   }, [response, axisTextColor]);
 
-  const yAxisMax = useMemo(() => {
+  const { yAxisMax, yAxisLabels } = useMemo(() => {
     const maxAvg = Math.max(
       0,
       ...response.data.flatMap((item) => [
@@ -85,13 +85,16 @@ export function BillComparisonBarChart({
       1_000,
       Math.ceil(maxAvg / Y_AXIS_SECTIONS / 1_000) * 1_000,
     );
-    return step * Y_AXIS_SECTIONS;
+    const labels: string[] = [];
+    for (let i = 0; i <= Y_AXIS_SECTIONS; i++) {
+      labels.push(formatCompact(i * step));
+    }
+    return { yAxisMax: step * Y_AXIS_SECTIONS, yAxisLabels: labels };
   }, [response.data]);
 
-  const groupWidth =
-    BAR_WIDTH * 2 + SPACING_WITHIN_GROUP + SPACING_BETWEEN_GROUPS;
-  const minChartWidth = SCREEN_WIDTH - 64;
-  const chartWidth = Math.max(minChartWidth, groupWidth * response.data.length);
+ 
+  
+  
 
   const selectedLabel =
     selected &&
@@ -125,25 +128,18 @@ export function BillComparisonBarChart({
       >
         <BarChart
           data={chartData}
-          width={chartWidth}
-          height={200}
-          barWidth={BAR_WIDTH}
-          barBorderRadius={6}
+          barBorderRadius={10}
           initialSpacing={16}
-          endSpacing={16}
+          endSpacing={20}
           maxValue={yAxisMax}
           noOfSections={Y_AXIS_SECTIONS}
-          yAxisLabelTexts={Array.from({ length: Y_AXIS_SECTIONS + 1 }, (_, i) =>
-            formatCompact((yAxisMax / Y_AXIS_SECTIONS) * i),
-          )}
+          yAxisLabelTexts={yAxisLabels}
           yAxisTextStyle={{ fontSize: 10, color: axisTextColor }}
           yAxisLabelWidth={44}
           yAxisColor="transparent"
-          xAxisColor={gridColor}
-          xAxisThickness={1}
+          xAxisColor="#e4e4e7"
           rulesColor={gridColor}
-          rulesType="dashed"
-          isAnimated
+          isAnimated={true}
           animationDuration={700}
           disableScroll
         />
