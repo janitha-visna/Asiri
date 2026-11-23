@@ -1,34 +1,12 @@
-import { Text } from "@/components/ui/text";
 import { useMemo } from "react";
-import { Dimensions, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { LineChart } from "react-native-gifted-charts";
-import {
-  formatCurrencyCompact,
-  formatCurrencyFull,
-} from "../revenue-chart.constants";
+import { formatCurrencyCompact } from "../revenue-chart.constants";
 import type { MonthlyRevenuePoint } from "../revenue-chart.types";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const CHART_LINE_COLOR = "#2563eb";
-const CHART_LINE_COLOR1 = "#2563eb";
+const CHART_LINE_COLOR = "#16a34a";
 
 type ChartDataItem = { value: number; label: string };
-
-function PointerLabel({ items }: { items: ChartDataItem[] }) {
-  const item = items[0];
-  if (!item) return null;
-  return (
-    <View className="min-w-[110px] items-center rounded-lg bg-foreground px-3 py-2 shadow-md">
-      <Text className="text-xs font-medium text-background/80">
-        {item.label}
-      </Text>
-      <Text className="text-sm font-bold text-background">
-        {formatCurrencyFull(item.value ?? 0)}
-      </Text>
-    </View>
-  );
-}
 
 export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
   const chartData: ChartDataItem[] = useMemo(
@@ -42,7 +20,7 @@ export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
 
   console.log("chartData:", chartData);
 
-  const Y_SECTIONS = 5;
+  const Y_SECTIONS = 6;
 
   const { yAxisMax, yAxisLabels } = useMemo(() => {
     const maxRevenue = Math.max(0, ...data.map((point) => point.value ?? 0));
@@ -60,7 +38,6 @@ export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
   const POINT_SPACING = 50;
   const INITIAL_SPACING = 10;
   const END_SPACING = 20;
-  const minChartWidth = SCREEN_WIDTH - 64;
 
   return (
     <ScrollView
@@ -77,13 +54,11 @@ export function RevenueLineChart({ data }: { data: MonthlyRevenuePoint[] }) {
         initialSpacing={INITIAL_SPACING}
         endSpacing={END_SPACING}
         spacing={POINT_SPACING}
-        // color={CHART_LINE_COLOR}
-        // startFillColor={CHART_LINE_COLOR}
-        // endFillColor={CHART_LINE_COLOR1}
+        color={CHART_LINE_COLOR}
+        startFillColor={CHART_LINE_COLOR}
+        endFillColor={CHART_LINE_COLOR}
         startOpacity={0.8}
         endOpacity={0.02}
-        //maxValue={Y_AXIS_MAX}
-        //noOfSections={Y_AXIS_SECTIONS}
         maxValue={yAxisMax}
         noOfSections={Y_SECTIONS}
         yAxisLabelTexts={yAxisLabels}

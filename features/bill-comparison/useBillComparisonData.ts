@@ -6,7 +6,7 @@ import type {
   BillComparisonStatus,
 } from "./bill-comparison.types";
 
-export function useBillComparisonData(): BillComparisonState {
+export function useBillComparisonData(year: number): BillComparisonState {
   const [status, setStatus] = useState<BillComparisonStatus>("loading");
   const [response, setResponse] = useState<BillComparisonResponse | null>(null);
   const requestId = useRef(0);
@@ -15,7 +15,7 @@ export function useBillComparisonData(): BillComparisonState {
     const currentRequest = ++requestId.current;
     setStatus("loading");
 
-    fetchBillComparison()
+    fetchBillComparison(year)
       .then((result) => {
         if (requestId.current !== currentRequest) return;
         setResponse(result);
@@ -26,7 +26,7 @@ export function useBillComparisonData(): BillComparisonState {
         setResponse(null);
         setStatus("error");
       });
-  }, []);
+  }, [year]);
 
   useEffect(() => {
     load();

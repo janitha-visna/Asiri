@@ -36,7 +36,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
 
-        <Drawer>
+        <Drawer screenOptions={{ swipeEdgeWidth: 20 }}>
           <Drawer.Screen
             name="index"
             options={{

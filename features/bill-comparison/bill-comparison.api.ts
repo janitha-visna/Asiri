@@ -16,9 +16,11 @@ type AverageBillByCategoryApiResponse = {
  * Fetches average bill comparison data (previous vs current year) per vehicle category
  * from GET /service-jobs/revenue/average-bill-by-category.
  */
-export async function fetchBillComparison(): Promise<BillComparisonResponse> {
+export async function fetchBillComparison(
+  year: number
+): Promise<BillComparisonResponse> {
   const res = await apiRequest<AverageBillByCategoryApiResponse>(
-    "/service-jobs/revenue/average-bill-by-category"
+    `/service-jobs/revenue/average-bill-by-category?year=${year}`
   );
 
   return {
