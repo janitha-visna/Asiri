@@ -1,9 +1,20 @@
+import { apiRequest } from "@/lib/api/client";
 import { formatDateKey, formatDateLabel } from "./electricity.constants";
 import type {
   ElectricityAnalyticsResponse,
   MeterReading,
   MeterReadingInput,
 } from "./electricity.types";
+
+type MonthlyElectricityApiResponse = {
+  year: number;
+  totalConsumption: number;
+  months: {
+    month: number;
+    label: string;
+    consumption: number;
+  }[];
+};
 
 const MONTHS = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -13,31 +24,32 @@ const MONTHS = [
 const SAMPLE_CONSUMPTION = [320, 280, 310, 400, 450, 500, 480, 460, 430, 410, 390, 370];
 
 /**
- * Fetches monthly electricity consumption analytics for a given year.
- * Replace this mock with a real API call, e.g. fetch(`/api/analytics/electricity?year=${year}`).
+ * Fetches monthly electricity consumption analytics for a given year
+ * from GET /electricity-usage/monthly?year=...
  */
 export async function fetchElectricityAnalytics(
   year: number
 ): Promise<ElectricityAnalyticsResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 900));
+  const res = await apiRequest<MonthlyElectricityApiResponse>(
+    `/electricity-usage/monthly?year=${year}`
+  );
 
-  // Simulated failure for demo/testing of the error state.
-  if (Math.random() < 0.1) {
-    throw new Error("Failed to load electricity analytics");
-  }
-
-  const total = SAMPLE_CONSUMPTION.reduce((sum, value) => sum + value, 0);
+  const byMonth = new Map(res.months.map((m) => [m.month, m]));
+  const data = MONTHS.map((fallback, idx) => {
+    const entry = byMonth.get(idx + 1);
+    return {
+      month: entry?.label ?? fallback,
+      consumption: entry?.consumption ?? 0,
+    };
+  });
 
   return {
-    year,
+    year: res.year,
     unit: "kWh",
-    months: MONTHS,
-    data: MONTHS.map((month, index) => ({
-      month,
-      consumption: SAMPLE_CONSUMPTION[index],
-    })),
-    total,
-    averageMonthly: Math.round(total / SAMPLE_CONSUMPTION.length),
+    months: data.map((d) => d.month),
+    data,
+    total: res.totalConsumption,
+    averageMonthly: Math.round(res.totalConsumption / 12),
   };
 }
 
@@ -88,15 +100,21 @@ export async function fetchRecentReadings(): Promise<MeterReading[]> {
 }
 
 /**
- * Saves today's meter reading.
- * Replace this mock with a real API call, e.g. POST /api/electricity/readings.
+ * Saves today's meter reading via POST /electricity-usage.
  */
 export async function saveMeterReading(
   input: MeterReadingInput
 ): Promise<MeterReading> {
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  await apiRequest<unknown>("/electricity-usage", {
+    method: "POST",
+    body: {
+      readingDate: input.date,
+      startReading: input.start,
+      endReading: input.end,
+    },
+  });
 
-  const reading: MeterReading = {
+  return {
     id: input.date,
     date: input.date,
     dateLabel: formatDateLabel(new Date(input.date)),
@@ -104,11 +122,4 @@ export async function saveMeterReading(
     end: input.end,
     consumption: input.end - input.start,
   };
-
-  if (!mockReadings) {
-    mockReadings = seedMockReadings();
-  }
-  mockReadings = [reading, ...mockReadings.filter((r) => r.date !== input.date)];
-
-  return reading;
 }

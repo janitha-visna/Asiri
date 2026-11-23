@@ -1,3 +1,4 @@
+import { apiRequest } from "@/lib/api/client";
 import type { ServiceTrendsResponse } from "./service-trends.types";
 
 const MONTHS = [
@@ -5,34 +6,37 @@ const MONTHS = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-/**
- * Fetches monthly service demand trends (per service type) for a given year.
- * Replace this mock with a real API call, e.g. fetch(`/api/service-trends?year=${year}`).
- */
-export async function fetchServiceTrends(year: number): Promise<ServiceTrendsResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 900));
+type DemandByMonthApiResponse = {
+  year: number;
+  services: string[];
+  months: {
+    month: number;
+    label: string;
+    counts: Record<string, number>;
+  }[];
+};
 
-  // Simulated failure for demo/testing of the error state.
-  if (Math.random() < 0.1) {
-    throw new Error("Failed to load service demand trends");
-  }
+/**
+ * Fetches monthly service demand trends (per service type) for a given year
+ * from GET /service-jobs/services/demand-by-month?year=...
+ */
+export async function fetchServiceTrends(
+  year: number
+): Promise<ServiceTrendsResponse> {
+  const res = await apiRequest<DemandByMonthApiResponse>(
+    `/service-jobs/services/demand-by-month?year=${year}`
+  );
+
+  const byMonth = new Map(res.months.map((m) => [m.month, m]));
 
   return {
-    year,
-    months: MONTHS,
-    data: [
-      {
-        serviceType: "Oil Change",
-        values: [30, 35, 40, 42, 38, 45, 48, 50, 46, 44, 41, 39],
-      },
-      {
-        serviceType: "Brake Service",
-        values: [20, 18, 25, 24, 26, 28, 30, 29, 27, 26, 24, 22],
-      },
-      {
-        serviceType: "Tire Replacement",
-        values: [12, 14, 16, 15, 18, 20, 22, 21, 19, 17, 15, 13],
-      },
-    ],
+    year: res.year,
+    months: MONTHS.map((fallback, idx) => byMonth.get(idx + 1)?.label ?? fallback),
+    data: res.services.map((serviceType) => ({
+      serviceType,
+      values: MONTHS.map(
+        (_, idx) => byMonth.get(idx + 1)?.counts?.[serviceType] ?? 0
+      ),
+    })),
   };
 }

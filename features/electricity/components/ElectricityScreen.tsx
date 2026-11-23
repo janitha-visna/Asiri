@@ -1,15 +1,13 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { useElectricityAnalytics } from "../useElectricityAnalytics";
 import { useRecentReadings } from "../useRecentReadings";
-import { ConsumptionHistoryList } from "./ConsumptionHistoryList";
 import { ElectricityEmptyState } from "./ElectricityEmptyState";
 import { ElectricityErrorState } from "./ElectricityErrorState";
 import { ElectricityLineChart } from "./ElectricityLineChart";
 import {
-  ConsumptionHistorySkeleton,
   ElectricityChartSkeleton,
   ElectricitySummaryCardsSkeleton,
 } from "./ElectricitySkeleton";
@@ -74,31 +72,6 @@ export function ElectricityScreen() {
             onSave={recent.addReading}
             isSaving={recent.isSaving}
           />
-        </CardContent>
-      </Card>
-
-      {/* Section 3 — Recent Electricity Consumption */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base text-foreground">
-            Recent Electricity Consumption
-          </CardTitle>
-          <Text className="text-xs text-muted-foreground">Last 7 days</Text>
-        </CardHeader>
-        <CardContent>
-          {recent.status === "loading" && <ConsumptionHistorySkeleton />}
-          {recent.status === "error" && (
-            <ElectricityErrorState
-              message="Couldn't load recent readings."
-              onRetry={recent.retry}
-            />
-          )}
-          {recent.status === "empty" && (
-            <ElectricityEmptyState message="No recent electricity readings recorded yet." />
-          )}
-          {recent.status === "success" && (
-            <ConsumptionHistoryList readings={recent.readings} />
-          )}
         </CardContent>
       </Card>
     </ScrollView>
