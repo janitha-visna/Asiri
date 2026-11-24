@@ -4,12 +4,6 @@ import { formatCurrencyFull } from "../revenue-analytics.constants";
 import { summarizeRevenueAnalytics } from "../revenue-analytics.utils";
 import type { RevenueAnalyticsResponse } from "../revenue-analytics.types";
 
-const TREND_STYLES = {
-  Increasing: { icon: "▲", className: "text-green-600" },
-  Decreasing: { icon: "▼", className: "text-red-600" },
-  Stable: { icon: "■", className: "text-slate-500" },
-} as const;
-
 function InsightRow({
   label,
   value,
@@ -37,7 +31,6 @@ export function RevenueAnalyticsInsights({
   response: RevenueAnalyticsResponse;
 }) {
   const summary = summarizeRevenueAnalytics(response);
-  const trendStyle = TREND_STYLES[summary.trend];
 
   return (
     <View className="gap-2.5">
@@ -58,11 +51,6 @@ export function RevenueAnalyticsInsights({
       <InsightRow
         label="Average Monthly Revenue"
         value={formatCurrencyFull(response.currency, summary.averageMonthlyRevenue)}
-      />
-      <InsightRow
-        label="Overall Trend"
-        value={`${trendStyle.icon} ${summary.trend}`}
-        valueClassName={trendStyle.className}
       />
     </View>
   );
