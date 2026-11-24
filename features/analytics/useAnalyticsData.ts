@@ -6,7 +6,7 @@ import type {
   AnalyticsStatus,
 } from "./analytics.types";
 
-export function useAnalyticsData(): AnalyticsState {
+export function useAnalyticsData(year: number): AnalyticsState {
   const [status, setStatus] = useState<AnalyticsStatus>("loading");
   const [response, setResponse] = useState<AnalyticsResponse | null>(null);
   const requestId = useRef(0);
@@ -15,7 +15,7 @@ export function useAnalyticsData(): AnalyticsState {
     const currentRequest = ++requestId.current;
     setStatus("loading");
 
-    fetchAnalytics()
+    fetchAnalytics(year)
       .then((result) => {
         if (requestId.current !== currentRequest) return;
         setResponse(result);
@@ -26,7 +26,7 @@ export function useAnalyticsData(): AnalyticsState {
         setResponse(null);
         setStatus("error");
       });
-  }, []);
+  }, [year]);
 
   useEffect(() => {
     load();

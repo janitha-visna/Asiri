@@ -7,16 +7,11 @@ import { Text } from "@/components/ui/text";
 import {
   NON_REPEAT_COLOR,
   REPEAT_COLOR,
-  Y_AXIS_SECTIONS,
   formatCompactCount,
   roundUpToNiceMax,
 } from "../analytics.constants";
 import type { AnalyticsResponse } from "../analytics.types";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-
-const BAR_WIDTH = 34;
-const BAR_SPACING = 32;
 
 type SelectedSegment = {
   vehicleType: string;
@@ -36,10 +31,20 @@ export function RepeatVehicleStackedBarChart({
   const gridColor = isDark ? "#3f3f46" : "#e4e4e7";
   const axisTextColor = isDark ? "#a1a1aa" : "#71717a";
 
-  const maxTotal = Math.max(
-    ...response.data.map((item) => item.repeatCount + item.nonRepeatCount)
-  );
-  const maxValue = roundUpToNiceMax(maxTotal, Y_AXIS_SECTIONS);
+  const Y_SECTIONS = 5;
+
+  const {  yAxisLabels } = useMemo(() => {
+    const maxTotal = Math.max(
+      0,
+      ...response.data.map((item) => item.repeatCount + item.nonRepeatCount),
+    );
+    const niceMax = roundUpToNiceMax(maxTotal, Y_SECTIONS);
+    const labels: string[] = [];
+    for (let i = 0; i <= Y_SECTIONS; i++) {
+      labels.push(formatCompactCount((niceMax / Y_SECTIONS) * i));
+    }
+    return { maxValue: niceMax, yAxisLabels: labels };
+  }, [response.data]);
 
   const stackData = useMemo(
     () =>
@@ -77,9 +82,8 @@ export function RepeatVehicleStackedBarChart({
     [response, axisTextColor]
   );
 
-  const groupWidth = BAR_WIDTH + BAR_SPACING;
-  const minChartWidth = SCREEN_WIDTH - 64;
-  const chartWidth = Math.max(minChartWidth, groupWidth * response.data.length);
+  
+  
 
   const selectedLabel =
     selected &&
@@ -109,28 +113,19 @@ export function RepeatVehicleStackedBarChart({
       >
         <BarChart
           stackData={stackData}
-          width={chartWidth}
-          height={200}
-          barWidth={BAR_WIDTH}
-          spacing={BAR_SPACING}
-          initialSpacing={20}
+          height={250}
+          initialSpacing={10}
           endSpacing={20}
-          stackBorderTopLeftRadius={6}
-          stackBorderTopRightRadius={6}
-          maxValue={maxValue}
-          noOfSections={Y_AXIS_SECTIONS}
-          yAxisLabelTexts={Array.from({ length: Y_AXIS_SECTIONS + 1 }, (_, i) =>
-            formatCompactCount((maxValue / Y_AXIS_SECTIONS) * i)
-          )}
+          noOfSections={Y_SECTIONS}
+          yAxisLabelTexts={yAxisLabels}
           yAxisTextStyle={{ fontSize: 10, color: axisTextColor }}
-          yAxisLabelWidth={36}
           yAxisColor="transparent"
           xAxisColor={gridColor}
           xAxisThickness={1}
           rulesColor={gridColor}
           rulesType="dashed"
           isAnimated
-          animationDuration={700}
+          animationDuration={400}
           disableScroll
         />
       </ScrollView>
