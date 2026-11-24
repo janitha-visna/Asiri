@@ -80,6 +80,13 @@ export default function RootLayout() {
               title: "Service Pricing Master",
             }}
           />
+          <Drawer.Screen
+            name="components"
+            options={{
+              drawerLabel: "Components",
+              title: "Components",
+            }}
+          />
         </Drawer>
         <PortalHost />
       </ThemeProvider>
